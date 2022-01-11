@@ -19,27 +19,13 @@ const SignupForm = ({ setIsAuth }) => {
     var sno = 1;
     var userIdArr = [];
     var userEmailArr = [];
-    user.map((user) => {return(
-        userIdArr.push(user.Id),
-        userEmailArr.push(user.userEmail)
-    )})
+    user.map((user) => {
+        return (
+            userIdArr.push(user.Id),
+            userEmailArr.push(user.userEmail)
+        )
+    })
     sno = Math.max(...userIdArr) + 1;
-    const signupWithGoogle = async () => {
-        signInWithPopup(auth, provider).then((result) => {
-
-            addDoc(signupCollectionRef, {
-                Id: sno,
-                userName: result.user.displayName,
-                userEmail: result.user.email,
-                userPhoneNumber: result.user.phoneNumber,
-                userPassword: userPasswordWithGoogle,
-            });
-            localStorage.setItem("isAuth", true);
-            setIsAuth(true);
-            navigate("/mainpage");
-        })
-    }
-
     const checkUser = (object, value) => {
         let flag = 0;
         for (let i = 0; i < object.length; i++) {
@@ -58,6 +44,27 @@ const SignupForm = ({ setIsAuth }) => {
             return false;
         }
     }
+    const signupWithGoogle = async () => {
+        signInWithPopup(auth, provider).then((result) => {
+            if (checkUser(userEmailArr, result.user.email)) {
+                alert("user allready exist with this Email ID,Try to login")
+                setIsAuth(false);
+            }
+            else {
+                addDoc(signupCollectionRef, {
+                    Id: sno,
+                    userName: result.user.displayName,
+                    userEmail: result.user.email,
+                    userPhoneNumber: result.user.phoneNumber,
+                    userPassword: userPasswordWithGoogle,
+                });
+                // localStorage.setItem("isAuth", true);
+                // setIsAuth(true);
+                navigate("/login");
+            }
+        })
+    }
+
     const signup = async (e) => {
         e.preventDefault();
         if (checkUser(userEmailArr, userEmail)) {

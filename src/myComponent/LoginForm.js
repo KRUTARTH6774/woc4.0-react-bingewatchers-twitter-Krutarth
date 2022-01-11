@@ -58,9 +58,9 @@ export const LoginForm = ({setIsAuth,setLoginuserid,setLoginDetails,loginDetails
             window.location.reload();
             localStorage.clear();
         }
-    }, [loginDetails])
+    }, [])
     return (
-        <form className="modal-content animate" method="POST">
+        <form className="modal-content animate" >
             <div className="container">
                 <label htmlFor="uname" style={{ color: "black" }}><b>Email-ID</b></label>
                 <input type="text" value={userEmail} onChange={(e)=>{setUserEmail(e.target.value)}} placeholder="Enter Email-ID" name="uname" required />

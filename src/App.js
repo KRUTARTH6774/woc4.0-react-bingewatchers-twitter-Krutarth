@@ -8,6 +8,8 @@ import { useState } from "react";
 import MainPage from './myComponent/MainPage';
 import { signOut } from "firebase/auth";
 import { auth } from './firebase-config';
+import Profile from './myComponent/Profile';
+import Trending from './myComponent/Trending';
 
 function App() {
   const [isAuth, setIsAuth] = useState(localStorage.getItem("isAuth"));
@@ -45,6 +47,16 @@ function App() {
                   loginDetails={loginDetails}
                   setLoginDetails={setLoginDetails}
                 />
+              }
+            />
+            <Route exact path="/profile"
+              element={
+                <Profile/>
+              }
+            />
+            <Route exact path="/trending"
+              element={
+                <Trending/>
               }
             />
           </Routes>
