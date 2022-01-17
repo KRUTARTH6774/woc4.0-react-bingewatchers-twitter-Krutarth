@@ -86,7 +86,7 @@ const MainPage = ({ isAuth }) => {
 
     return (
         <>
-            <h3>Welcome to BingeWatcher!! {loggedUser.userName} </h3>
+            <h3>Welcome to BingeWatcher!! <br/>{loggedUser.userName} </h3>
 
             <ul>
                 <Tweet loggedUser={loggedUser} />

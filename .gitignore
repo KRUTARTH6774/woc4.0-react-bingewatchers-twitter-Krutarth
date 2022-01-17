@@ -2,7 +2,6 @@
 
 # dependencies
 /firebase-config.js
-.gitignore
 /node_modules
 /.pnp
 .pnp.js
