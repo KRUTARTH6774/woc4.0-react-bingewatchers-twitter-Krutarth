@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { addDoc, collection, getDocs, query, orderBy, doc, deleteDoc, where } from "firebase/firestore";
 import { AiOutlineComment } from "react-icons/ai";
 import { FaTrash } from "react-icons/fa";
+import { BsPersonCircle } from "react-icons/bs";
 import { db } from "../firebase-config";
 import Comment from "./Comment";
 import AddComment from './AddComment';
@@ -9,7 +10,7 @@ const Tweet = ({ loggedUser }) => {
 
     const [tweet, setTweet] = useState("");
     const tweetCollectionRef = collection(db, "tweet");
-    const q = query(tweetCollectionRef, orderBy("Id", "desc"));
+    const q = query(tweetCollectionRef, orderBy("date", "desc"));
     const [tweetList, setTweetList] = useState([]);
     const [commentList, setCommentList] = useState([])
 
@@ -23,7 +24,9 @@ const Tweet = ({ loggedUser }) => {
     })
     sno = Math.max(...userIdArr) + 1;
 
-    var time = new Date().toLocaleString();
+    var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    var d = new Date(),
+        time = d.getDate() + ' ' + months[d.getMonth()] + ', ' + d.getFullYear() + ', ' + (d.getHours() % 12) + ':' + d.getMinutes() + ':' + d.getSeconds();
 
     const handleTweet = async (e) => {
         e.preventDefault();
@@ -105,36 +108,46 @@ const Tweet = ({ loggedUser }) => {
 
                                 <div className="card-header" style={{
                                     display: "flex",
-                                    alignItems: "baseline",
+                                    alignItems: "center",
                                     justifyContent: "space-between"
                                 }}>
-                                    <h5>@{tweet.userName}</h5>
+                                    <BsPersonCircle size="4em" />
+                                    <h5 style={{
+                                        fontWeight: "bold",
+                                        marginLeft: "1%",
+                                        marginRight: "auto"
+                                    }}>{tweet.userName}</h5>
                                     {tweet.userID === localStorage.getItem("currentUser") && <button className="btn btn-danger" style={{ width: "auto" }} onClick={() => { deleteTweet(tweet.id); }}>
                                         <FaTrash />
                                     </button>}
+                                    <br/>
+                                    <span style={{
+                                            position: "absolute",
+                                            marginLeft: "6%",
+                                            marginTop: "3.5%"
+                                    }}>{tweet.date}</span>
                                 </div>
-
 
                                 <div className="card-body">
                                     <h5 className="card-title">tweet id : {tweet.id}</h5>
                                     <p className="card-text">{tweet.tweet}</p>
 
 
-                                    <AddComment tweet={tweet} setCommentList={setCommentList} />
 
-                                    <p style={{
+                                    <div style={{
                                         display: "flex",
-                                        alignItems: "center",
+                                        alignItems: "baseline",
                                         justifyContent: "space-between"
                                     }}>
-                                        <span>{tweet.date}</span>
+                                        <AddComment tweet={tweet} setCommentList={setCommentList} loggedUser={loggedUser} />
+                                        {/* <span>{tweet.date}</span> */}
                                         <button className="btn btn-primary btn-border-width" type="button" onClick={() => { myFunction(tweet.id) }} style={{ width: "auto" }}>
                                             <AiOutlineComment size="2em" />
                                         </button>
-                                    </p>
+                                    </div>
                                     <div className="collapse" id={tweet.id}>
                                         <div className="card card-body">
-                                            <Comment commentList={commentList} setCommentList={setCommentList} tweetID={tweet.id} loggedUser={loggedUser} />
+                                            <Comment commentList={commentList} setCommentList={setCommentList} tweetID={tweet.id} />
                                         </div>
                                     </div>
 

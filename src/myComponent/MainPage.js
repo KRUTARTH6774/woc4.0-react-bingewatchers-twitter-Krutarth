@@ -57,7 +57,7 @@ const MainPage = ({ isAuth }) => {
     //         regions: ["hello", "hebei"]
     //     });
     // }
-    // // setDetails().then(() => { setDetails1() });
+    // setDetails().then(() => { setDetails1() });
     // const citiesRef1 = doc(db, "cities", "LA");
     // const str = "If your document contains an array field, you can use arrayUnion() and arrayRemove() to add and remove elements. arrayUnion()";
     // const setDetails1 = async () => {
@@ -71,16 +71,17 @@ const MainPage = ({ isAuth }) => {
     //     //     regions1: arrayRemove({str})
     //     // });
     // }
-    // // setDetails1()
+    // setDetails1()
     // const citiesRef2 = doc(db, "cities", "LA");
-    // const citiesRef2 = doc(db, "users", localStorage.getItem("currentUser"));
+    // // const citiesRef2 = doc(db, "users", localStorage.getItem("currentUser"));
     // const [city, setCity] = useState("")
     // const setDetails2 = async () => {
     //     const docSnap = await getDoc(citiesRef2);
     //     setCity(docSnap.data());
-
+    //     console.log(city.age);
     // }
     // setDetails2();
+
 
 
 
