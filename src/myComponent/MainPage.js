@@ -3,12 +3,12 @@ import { useNavigate } from "react-router-dom";
 import { db } from "../firebase-config";
 import { getDocs, collection, doc, getDoc, setDoc, updateDoc, arrayUnion, arrayRemove } from "firebase/firestore";
 import Tweet from './Tweet';
-const MainPage = ({ isAuth }) => {
+const MainPage = ({ isAuth ,loggedUser,setLoggedUser}) => {
     let navigate = useNavigate();
     // const loginCollectionRef = collection(db, "users");
 
 
-    const [loggedUser, setLoggedUser] = useState("");
+    
     
     useEffect(() => {
         
@@ -88,7 +88,6 @@ const MainPage = ({ isAuth }) => {
     return (
         <>
             <h3>Welcome to BingeWatcher!! <br/>{loggedUser.userName} </h3>
-
             <ul>
                 <Tweet loggedUser={loggedUser} />
             </ul>

@@ -5,14 +5,14 @@ import './Navbar.css'
 const Navbar = ({ isAuth, signoutUser }) => {
     return (
         <>
-            {isAuth ?
+            {localStorage.getItem("isAuth") ?
                 (
                     <ul className="nav nav-pills mb-3" id="pills-tab" role="tablist">
-                        <Link to="/mainpage"><li className="nav-item" role="presentation">
-                            <button href="/mainpage" className="nav-link btn btn-primary" id="pills-home-tab" >Home</button>
+                        <Link to="/mainpage"><li className="nav-item" role="presentation" >
+                            <button href="/mainpage" className="nav-link btn btn-primary" id="pills-home-tab"  >Home</button>
                         </li></Link>
                         <Link to="/profile"><li className="nav-item" role="presentation">
-                            <button href="/profile" className="nav-link btn btn-primary" id="pills-profile-tab" type="button" >Profile</button>
+                            <button href="/profile" className="nav-link btn btn-primary" id="pills-profile-tab" type="button" onClick={()=>{localStorage.setItem("ClickedProfile",localStorage.getItem("currentUser"))}} >My Profile</button>
                         </li></Link>
                         <Link to="/trending"><li className="nav-item" role="presentation">
                             <button  className="nav-link btn btn-primary" id="pills-profile-tab" type="button" >Trending</button>

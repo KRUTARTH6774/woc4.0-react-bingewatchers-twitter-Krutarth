@@ -15,7 +15,7 @@ function App() {
   const [isAuth, setIsAuth] = useState(localStorage.getItem("isAuth"));
 
   const [loginDetails, setLoginDetails] = useState([]);
-
+  const [loggedUser, setLoggedUser] = useState("");
   const signoutUser = () => {
     signOut(auth).then(() => {
       localStorage.clear();
@@ -29,7 +29,7 @@ function App() {
         <Router>
           <Navbar signoutUser={signoutUser} isAuth={isAuth} />
           <Routes >
-            <Route path="/" element={<Home />} />
+            <Route path="/" element={<Home isAuth={isAuth}/> }/>
             <Route exact path="/login"
               element={
                 <LoginForm
@@ -46,12 +46,14 @@ function App() {
                   isAuth={isAuth}
                   loginDetails={loginDetails}
                   setLoginDetails={setLoginDetails}
+                  loggedUser={loggedUser}
+                  setLoggedUser={setLoggedUser}
                 />
               }
             />
             <Route exact path="/profile"
               element={
-                <Profile/>
+                <Profile isAuth={isAuth} loggedUser={loggedUser} />
               }
             />
             <Route exact path="/trending"

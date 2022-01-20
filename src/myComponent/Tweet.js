@@ -6,9 +6,12 @@ import { BsPersonCircle } from "react-icons/bs";
 import { db } from "../firebase-config";
 import Comment from "./Comment";
 import AddComment from './AddComment';
+import { Link } from "react-router-dom";
+
 const Tweet = ({ loggedUser }) => {
 
     const [tweet, setTweet] = useState("");
+    const [Loading, setLoading] = useState(false);
     const tweetCollectionRef = collection(db, "tweet");
     const q = query(tweetCollectionRef, orderBy("date", "desc"));
     const [tweetList, setTweetList] = useState([]);
@@ -39,9 +42,10 @@ const Tweet = ({ loggedUser }) => {
         });
         setTweet("");
         const getTweet = async () => {
-            const data = await getDocs(q)
-            setTweetList(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
+            const data = await getDocs(q);
+            setTweetList(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
             // console.log(data.data());
+            setLoading(true);
         }
         getTweet();
     }
@@ -50,8 +54,9 @@ const Tweet = ({ loggedUser }) => {
 
     useEffect(() => {
         const getTweet = async () => {
-            const data = await getDocs(q)
-            setTweetList(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
+            const data = await getDocs(q);
+            setTweetList(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+            setLoading(true);
         }
         getTweet();
     }, []);
@@ -71,8 +76,9 @@ const Tweet = ({ loggedUser }) => {
         });
 
         const getTweet = async () => {
-            const data = await getDocs(q)
-            setTweetList(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
+            const data = await getDocs(q);
+            setTweetList(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+            setLoading(true);
         }
         getTweet();
     }
@@ -85,82 +91,94 @@ const Tweet = ({ loggedUser }) => {
         }
     }
     return (
-        <div className="container" style={{
-            display: "flex",
-            justifyContent: "center",
-            flexWrap: "wrap",
-            alignItems: "center",
-            textAlign: "center",
-            width: "auto"
-        }}>
-            <div className="form-floating container">
-                <textarea className="form-control" value={tweet} onChange={(e) => { setTweet(e.target.value) }} placeholder="tweet... " id="floatingTextarea" style={{ height: "85px" }}></textarea>
-                <label htmlFor="floatingTextarea" style={{ marginTop: "1%", marginLeft: "1%" }}>Tweet...</label>
-                <button type="button" onClick={handleTweet} className="btn btn-primary">Tweet</button>
+        <>
+            {Loading ?
+                <div className="container" style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    flexWrap: "wrap",
+                    alignItems: "center",
+                    textAlign: "center",
+                    width: "auto"
+                }}>
+                    <div className="form-floating container">
+                        <textarea className="form-control" value={tweet} onChange={(e) => { setTweet(e.target.value) }} placeholder="tweet... " id="floatingTextarea" style={{ height: "85px" }}></textarea>
+                        <label htmlFor="floatingTextarea" style={{ marginTop: "1%", marginLeft: "1%" }}>Tweet...</label>
+                        <button type="button" onClick={handleTweet} className="btn btn-primary">Tweet</button>
 
 
-            </div>
-            <div className="display" style={{ marginLeft: "-2%", width: "-webkit-fill-available" }}>
-                <ul >
-                    {tweetList.map((tweet) => {
-                        return (
-                            <div className="card text-center" style={{ margin: "5% 0%" }} key={tweet.id}>
+                    </div>
+                    <div className="display" style={{ marginLeft: "-2%", width: "-webkit-fill-available" }}>
+                        <ul >
+                            {tweetList.map((tweet) => {
+                                return (
+                                    <div className="card text-center" style={{ margin: "5% 0%" }} key={tweet.id}>
 
-                                <div className="card-header" style={{
-                                    display: "flex",
-                                    alignItems: "center",
-                                    justifyContent: "space-between"
-                                }}>
-                                    <BsPersonCircle size="4em" />
-                                    <h5 style={{
-                                        fontWeight: "bold",
-                                        marginLeft: "1%",
-                                        marginRight: "auto"
-                                    }}>{tweet.userName}</h5>
-                                    {tweet.userID === localStorage.getItem("currentUser") && <button className="btn btn-danger" style={{ width: "auto" }} onClick={() => { deleteTweet(tweet.id); }}>
-                                        <FaTrash />
-                                    </button>}
-                                    <br/>
-                                    <span style={{
-                                            position: "absolute",
-                                            marginLeft: "6%",
-                                            marginTop: "3.5%"
-                                    }}>{tweet.date}</span>
-                                </div>
-
-                                <div className="card-body">
-                                    <h5 className="card-title">tweet id : {tweet.id}</h5>
-                                    <p className="card-text">{tweet.tweet}</p>
+                                        <div className="card-header" style={{
+                                            display: "flex",
+                                            alignItems: "center",
+                                            justifyContent: "space-between"
+                                        }}>
+                                            <BsPersonCircle size="4em" />
+                                            <h5 style={{
+                                                fontWeight: "bold",
+                                                marginLeft: "1%",
+                                                marginRight: "auto"
+                                            }}><Link to='/profile' onClick={() => { localStorage.setItem("ClickedProfile", tweet.userID) }} style={{ textDecoration: "none" }} >{tweet.userName}</Link></h5>
 
 
+                                            {tweet.userID === localStorage.getItem("currentUser") && <button className="btn btn-danger" style={{ width: "auto" }} onClick={() => { deleteTweet(tweet.id); }}>
+                                                <FaTrash />
+                                            </button>}
+                                            <br />
+                                            <span style={{
+                                                position: "absolute",
+                                                marginLeft: "6%",
+                                                marginTop: "3.5%"
+                                            }}>{tweet.date}</span>
+                                        </div>
 
-                                    <div style={{
-                                        display: "flex",
-                                        alignItems: "baseline",
-                                        justifyContent: "space-between"
-                                    }}>
-                                        <AddComment tweet={tweet} setCommentList={setCommentList} loggedUser={loggedUser} />
-                                        {/* <span>{tweet.date}</span> */}
-                                        <button className="btn btn-primary btn-border-width" type="button" onClick={() => { myFunction(tweet.id) }} style={{ width: "auto" }}>
-                                            <AiOutlineComment size="2em" />
-                                        </button>
-                                    </div>
-                                    <div className="collapse" id={tweet.id}>
-                                        <div className="card card-body">
-                                            <Comment commentList={commentList} setCommentList={setCommentList} tweetID={tweet.id} />
+                                        <div className="card-body">
+                                            <h5 className="card-title">tweet id : {tweet.id}</h5>
+                                            <p className="card-text">{tweet.tweet}</p>
+
+
+
+                                            <div style={{
+                                                display: "flex",
+                                                alignItems: "baseline",
+                                                justifyContent: "space-between"
+                                            }}>
+                                                <AddComment tweet={tweet} setCommentList={setCommentList} loggedUser={loggedUser} />
+                                                {/* <span>{tweet.date}</span> */}
+                                                <button className="btn btn-primary btn-border-width" type="button" onClick={() => { myFunction(tweet.id) }} style={{ width: "auto" }}>
+                                                    <AiOutlineComment size="2em" />
+                                                </button>
+                                            </div>
+                                            <div className="collapse" id={tweet.id}>
+                                                <div className="card card-body">
+                                                    <Comment commentList={commentList} setCommentList={setCommentList} tweetID={tweet.id} />
+                                                </div>
+                                            </div>
+
                                         </div>
                                     </div>
-
-                                </div>
-                            </div>
-                        )
-                    })}
-                </ul>
-            </div>
+                                )
+                            })}
+                        </ul>
+                    </div>
 
 
 
-        </div>
+                </div> :
+                <div className="spinner-border" role="status" style={{
+                    display: "flex",
+                    margin: "auto"
+                }}>
+                    <span className="visually-hidden">Loading...</span>
+                </div>
+            }
+        </>
     )
 }
 
