@@ -33,21 +33,27 @@ const Tweet = ({ loggedUser }) => {
 
     const handleTweet = async (e) => {
         e.preventDefault();
-        await addDoc(tweetCollectionRef, {
-            Id: sno,
-            userID: localStorage.getItem("currentUser"),
-            userName: loggedUser.userName,
-            tweet: tweet,
-            date: time
-        });
-        setTweet("");
-        const getTweet = async () => {
-            const data = await getDocs(q);
-            setTweetList(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
-            // console.log(data.data());
-            setLoading(true);
+        if (tweet === "") {
+            alert("write some text on it -_-")
         }
-        getTweet();
+        else {
+            await addDoc(tweetCollectionRef, {
+                Id: sno,
+                userID: localStorage.getItem("currentUser"),
+                userName: loggedUser.userName,
+                tweet: tweet,
+                date: time
+            });
+
+            setTweet("");
+            const getTweet = async () => {
+                const data = await getDocs(q);
+                setTweetList(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+                // console.log(data.data());
+                setLoading(true);
+            }
+            getTweet();
+        }
     }
 
     const commentCollectionRef = collection(db, "comments");
@@ -139,7 +145,7 @@ const Tweet = ({ loggedUser }) => {
                                         </div>
 
                                         <div className="card-body">
-                                            <h5 className="card-title">tweet id : {tweet.id}</h5>
+                                            
                                             <p className="card-text">{tweet.tweet}</p>
 
 
