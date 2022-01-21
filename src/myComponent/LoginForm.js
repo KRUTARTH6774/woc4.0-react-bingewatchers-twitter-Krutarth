@@ -59,6 +59,10 @@ export const LoginForm = ({setIsAuth,setLoginuserid,setLoginDetails,loginDetails
             localStorage.clear();
         }
     }, [])
+    const handleCancle = () =>{
+        setUserPassword("");
+        setUserEmail("");
+    }
     return (
         <form className="modal-content animate" >
             <div className="container">
@@ -78,7 +82,7 @@ export const LoginForm = ({setIsAuth,setLoginuserid,setLoginDetails,loginDetails
                     display: "flex",
                     justifyContent: "space-between",
                 }}>
-                <button type="button" className="cancelbtn">Cancel</button>
+                <button type="button" className="cancelbtn" onClick={handleCancle}>Cancel</button>
                 <span className="psw" style={{ color: "black" }}>Forgot <a href="/#">password?</a></span>
             </div>
         </form>
