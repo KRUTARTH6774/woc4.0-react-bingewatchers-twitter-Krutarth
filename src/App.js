@@ -26,10 +26,13 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
+        <marquee width="100%" direction="left" height="30%">
+          This WebSite is still under construction so some of the functionalities doesn't work :(
+        </marquee>
         <Router>
           <Navbar signoutUser={signoutUser} isAuth={isAuth} />
           <Routes >
-            <Route path="/" element={<Home isAuth={isAuth}/> }/>
+            <Route path="/" element={<Home isAuth={isAuth} />} />
             <Route exact path="/login"
               element={
                 <LoginForm
@@ -58,7 +61,7 @@ function App() {
             />
             <Route exact path="/trending"
               element={
-                <Trending/>
+                <Trending />
               }
             />
           </Routes>

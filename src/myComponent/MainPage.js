@@ -23,7 +23,7 @@ const MainPage = ({ isAuth ,loggedUser,setLoggedUser}) => {
                 const loginCollectionRef = doc(db, "users", localStorage.getItem("currentUser"));
                 const dataSnap = await getDoc(loginCollectionRef);
                 const data = dataSnap.data()
-                setLoggedUser(data);
+                setLoggedUser({...data,id : localStorage.getItem("currentUser")});
             }
             getDetails();
         }
@@ -59,17 +59,17 @@ const MainPage = ({ isAuth ,loggedUser,setLoggedUser}) => {
     // }
     // setDetails().then(() => { setDetails1() });
     // const citiesRef1 = doc(db, "cities", "LA");
-    // const str = "If your document contains an array field, you can use arrayUnion() and arrayRemove() to add and remove elements. arrayUnion()";
+    // const str = "HIIII";
     // const setDetails1 = async () => {
     //     await updateDoc(citiesRef1, {
-    //         "age": 69
+    //         "age": 699999
     //     })
     //     await updateDoc(citiesRef1, {
     //         regions1: arrayUnion({ str })
     //     });
-    //     // await updateDoc(citiesRef1, {
-    //     //     regions1: arrayRemove({str})
-    //     // });
+        // await updateDoc(citiesRef1, {
+        //     regions1: arrayRemove({str})
+        // });
     // }
     // setDetails1()
     // const citiesRef2 = doc(db, "cities", "LA");

@@ -1,46 +1,201 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from "react-router-dom";
-import { collection, getDocs, getDoc, query, orderBy, doc, deleteDoc, where } from "firebase/firestore";
+import { collection, getDocs, getDoc, query, orderBy, updateDoc, doc, deleteDoc, where, arrayUnion, arrayRemove } from "firebase/firestore";
 import { db } from "../firebase-config";
 import { BsPersonCircle } from "react-icons/bs";
 import Comment from "./Comment";
 import AddComment from './AddComment';
 import { AiOutlineComment } from "react-icons/ai";
 import { FaTrash } from "react-icons/fa";
-//loggedUser
+
 const Profile = ({ isAuth, loggedUser }) => {
     let navigate = useNavigate();
+
     const [Loading, setLoading] = useState(false);
     const [UserData, setUserData] = useState([])
+
     if (!isAuth) {
         navigate("/");
     }
-    else {
-        //Clicked User Data
+    // else {
+    //Clicked User Data
 
-        const userRef = doc(db, "users", localStorage.getItem("ClickedProfile"));
-        const setUserProfile = async () => {
-            const docSnap = await getDoc(userRef);
-            setUserData({ ...docSnap.data(), id: localStorage.getItem("ClickedProfile") });
-            setLoading(true);
+
+
+
+
+
+    const [Followers, setFollowers] = useState(0)
+    const [Following, setFollowing] = useState(0)
+
+    // const setUserProfile = async () => {
+    //     const docSnap = await getDoc(userRef);
+    //     setUserData({ ...docSnap.data(), id: localStorage.getItem("ClickedProfile") });
+    //     setLoading(true);
+    //     setCount(UserData.Followers ? UserData.Followers.length : 0);
+    //     setFollowers(UserData.Followers ? UserData.Followers.length : 0);
+    //     setFollowing(UserData.Following ? UserData.Following.length : 0);
+    //     setFollowers(UserData.Followers);
+    //     checkForFollow();
+    // }
+    // setUserProfile();
+
+    useEffect(() => {
+        if (!isAuth) {
+            navigate("/");
         }
-        setUserProfile();
+        else {
+            const setUserProfile = async () => {
+                const userRef = doc(db, "users", localStorage.getItem("ClickedProfile"));
+                const docSnap = await getDoc(userRef);
+                setUserData({ ...docSnap.data(), id: localStorage.getItem("ClickedProfile") });
+                setLoading(true);
+                setFollowers(docSnap.data().Followers ? docSnap.data().Followers.length : 0);
+                setFollowing(docSnap.data().Following ? docSnap.data().Following.length : 0);
+                // if(docSnap.data().Followers.length === 0){
+                //     localStorage.setItem("Follow", "false")
+                //     console.log("line : 50");
+                // }
+                // console.log(UserData.Following.length);
+                // setCount(UserData.Followers ? UserData.Followers.length : 0);
+                // setFollowers(UserData.Followers);
+                let ptr = false;
+                for (let i = 0; i < (docSnap.data().Followers ? docSnap.data().Followers.length : 0); i++) {
+
+                    if (localStorage.getItem("currentUser") === docSnap.data().Followers[i]) {
+                        let Follow = document.getElementById("Follow");
+                        Follow.style.display = "none";
+                        let unFollow = document.getElementById("UnFollow")
+                        unFollow.style.display = "block";
+                        // localStorage.setItem("Follow", "true")
+                        ptr = true;
+                        // console.log("62");
+                        break;
+                    }
+                    else {
+                        let Follow = document.getElementById("Follow");
+                        Follow.style.display = "block";
+                        let unFollow = document.getElementById("UnFollow")
+                        unFollow.style.display = "none";
+                        ptr = false;
+                        // localStorage.setItem("Follow", "false")
+                        // console.log("70");
+                    }
+                }
+                if (ptr === true) {
+                    localStorage.setItem("Follow", "true")
+                }
+                else {
+                    localStorage.setItem("Follow", "false")
+                }
+                // if(!docSnap.data().Followers ){
+                //     localStorage.setItem("Follow", "false");
+                //     console.log("false");
+                // }
+
+                const data = await getDocs(q);
+                setTweetList(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+                setLoading(true);
+            }
+            setUserProfile();
+        }
+    }, [])
+
+    // const temp = ()=>{
+    //     setFollowers(UserData.Followers ? UserData.Followers.length : 0);
+    //     setFollowing(UserData.Following ? UserData.Following.length : 0);
+    // }
+    // temp();
+
+    // useEffect(() => {
+    //     const getTweet = async () => {
+    //         // const docSnap = await getDoc(userRef);
+    //         // setUserData({ ...docSnap.data(), id: localStorage.getItem("ClickedProfile") });
+    //         // setLoading(true);
+    //         // // setCount(UserData.Followers ? UserData.Followers.length : 0);
+    //         // setFollowers(UserData.Followers ? UserData.Followers.length : 0);
+    //         // setFollowing(UserData.Following ? UserData.Following.length : 0);
+    //         // setFollowers(UserData.Followers);
+    //         // checkForFollow();
+
+    //         const data = await getDocs(q);
+    //         setTweetList(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+    //         setLoading(true);
+
+    //     }
+    //     getTweet();
+
+    // }, []);
+    if (localStorage.getItem("currentUser")) {
+        var LoggedUserRef = doc(db, "users", localStorage.getItem("currentUser"));
+        var userRef = doc(db, "users", localStorage.getItem("ClickedProfile"));
     }
 
+        const UpdateFollowUser = async () => {
+            await updateDoc(LoggedUserRef, {
+                Following: arrayUnion(UserData.id)
+            });
+            await updateDoc(userRef, {
+                Followers: arrayUnion(localStorage.getItem("currentUser"))
+            });
+        }
+        const DeleteFollowUser = async () => {
+            await updateDoc(LoggedUserRef, {
+                Following: arrayRemove(UserData.id)
+            });
+            await updateDoc(userRef, {
+                Followers: arrayRemove(localStorage.getItem("currentUser"))
+            });
+        }
+    
+
+        const handleFollowers = (e) => {
+            e.preventDefault();
+            localStorage.setItem("Follow", "true")
+            let Follow = document.getElementById("Follow");
+            let unFollow = document.getElementById("UnFollow")
+            Follow.style.display = "none";
+            unFollow.style.display = "block";
+            // setCount(count + 1);
+            setFollowers(Followers + 1);
+            // console.log("+1");
+            UpdateFollowUser();
+            // if (document.getElementById("Follow").innerHTML === "Follow") {
+            //     document.getElementById("Follow").innerHTML = "Following";
+            //     // document.getElementById("FsV").innerHTML = UserData.Followers ? UserData.Followers.length : '0';
+            //     document.getElementById("Follow").style.backgroundColor = "red"
+
+            //     UpdateFollowUser();
+
+            // }
+            // else if (document.getElementById("Follow").innerHTML === "Following") {
+            //     document.getElementById("Follow").innerHTML = "Follow";
+            //     document.getElementById("Follow").style.backgroundColor = "Blue";
+            //     DeleteFollowUser();
+            // }
+        }
+
+        const handleUnFollow = (e) => {
+            e.preventDefault();
+            localStorage.setItem("Follow", "false")
+            let Follow = document.getElementById("Follow");
+            let unFollow = document.getElementById("UnFollow")
+            Follow.style.display = "block";
+            unFollow.style.display = "none";
+            // setCount(count - 1);
+            setFollowers(Followers - 1);
+            DeleteFollowUser();
+        }
+    
+    // useEffect(()=>{
+    //     setCount(UserData.Followers ? UserData.Followers.length : 0);
+    // },[count])
     //Clicked user Tweets
     const tweetCollectionRef = collection(db, "tweet");
     const q = query(tweetCollectionRef, where("userID", "==", localStorage.getItem("ClickedProfile")));
     const [tweetList, setTweetList] = useState([]);
     const [commentList, setCommentList] = useState([])
 
-    useEffect(() => {
-        const getTweet = async () => {
-            const data = await getDocs(q);
-            setTweetList(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
-            setLoading(true);
-        }
-        getTweet();
-    }, []);
     //time
 
     const commentCollectionRef = collection(db, "comments");
@@ -74,6 +229,7 @@ const Profile = ({ isAuth, loggedUser }) => {
             x.style.display = "none";
         }
     }
+
     return (
         <>
             {Loading ?
@@ -96,16 +252,16 @@ const Profile = ({ isAuth, loggedUser }) => {
                                                     </div>
                                                     <h3 className="m-b-0">{UserData.userName}</h3>
                                                     <p>Web Designer &amp; Developer</p>
-                                                    <button className="m-t-10 waves-effect waves-dark btn btn-primary btn-md btn-rounded" >Follow</button>
+                                                    {/* <button className="m-t-10 waves-effect waves-dark btn btn-primary btn-md btn-rounded" >Follow</button> */}
                                                     <div className="row text-center m-t-20">
                                                         <div className="col-lg-4 col-md-4 m-t-20">
-                                                            <h3 className="m-b-0 font-light">10434</h3><small>Articles</small>
+                                                            <h3 className="m-b-0 font-light">{tweetList.length}</h3><small>Tweets</small>
                                                         </div>
                                                         <div className="col-lg-4 col-md-4 m-t-20">
-                                                            <h3 className="m-b-0 font-light">434K</h3><small>Followers</small>
+                                                            <h3 className="m-b-0 font-light">{Followers}</h3><small>Followers</small>
                                                         </div>
                                                         <div className="col-lg-4 col-md-4 m-t-20">
-                                                            <h3 className="m-b-0 font-light">5454</h3><small>Following</small>
+                                                            <h3 className="m-b-0 font-light">{Following}</h3><small>Following</small>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -116,11 +272,12 @@ const Profile = ({ isAuth, loggedUser }) => {
                                 <div className="display" style={{ marginLeft: "-2%", width: "-webkit-fill-available" }}>
                                     <ul style={{
                                         display: "flex",
-                                        justifyContent: "center"
+                                        justifyContent: "center",
+                                        flexWrap: "wrap"
                                     }}>
                                         {tweetList.map((tweet) => {
                                             return (
-                                                <div className="card text-center" style={{ margin: "5% 0%", width: "60%" }} key={tweet.id}>
+                                                <div className="card text-center" style={{ margin: "5% 0%", width: "60%",marginBottom: "-2%" }} key={tweet.id}>
                                                     <div className="card-header" style={{
                                                         display: "flex",
                                                         alignItems: "center",
@@ -143,7 +300,7 @@ const Profile = ({ isAuth, loggedUser }) => {
                                                         }}>{tweet.date}</span>
                                                     </div>
                                                     <div className="card-body">
-                                                        <h5 className="card-title">tweet id : {tweet.id}</h5>
+                                                        {/* <h5 className="card-title">tweet id : {tweet.id}</h5> */}
                                                         <p className="card-text">{tweet.tweet}</p>
                                                         <div style={{
                                                             display: "flex",
@@ -184,16 +341,17 @@ const Profile = ({ isAuth, loggedUser }) => {
                                                     </div>
                                                     <h3 className="m-b-0">{UserData.userName}</h3>
                                                     <p>Web Designer &amp; Developer</p>
-                                                    <button className="m-t-10 waves-effect waves-dark btn btn-primary btn-md btn-rounded" >Follow</button>
+                                                    <button className="m-t-10 waves-effect waves-dark btn btn-primary btn-md btn-rounded" id="Follow" onClick={(e) => { handleFollowers(e) }} >Follow</button>
+                                                    <button className="m-t-10 waves-effect waves-dark btn btn-primary btn-md btn-rounded" style={{ display: "none", backgroundColor: "red" }} id="UnFollow" onClick={(e) => { handleUnFollow(e) }} >Unfollow</button>
                                                     <div className="row text-center m-t-20">
                                                         <div className="col-lg-4 col-md-4 m-t-20">
-                                                            <h3 className="m-b-0 font-light">10434</h3><small>Articles</small>
+                                                            <h3 className="m-b-0 font-light">{tweetList.length}</h3><small>Tweets</small>
                                                         </div>
                                                         <div className="col-lg-4 col-md-4 m-t-20">
-                                                            <h3 className="m-b-0 font-light">434K</h3><small>Followers</small>
+                                                            <h3 className="m-b-0 font-light" id="FsV">{Followers}</h3><small>Followers</small>
                                                         </div>
                                                         <div className="col-lg-4 col-md-4 m-t-20">
-                                                            <h3 className="m-b-0 font-light">5454</h3><small>Following</small>
+                                                            <h3 className="m-b-0 font-light">{Following}</h3><small>Following</small>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -204,11 +362,12 @@ const Profile = ({ isAuth, loggedUser }) => {
                                 <div className="display" style={{ marginLeft: "-2%", width: "-webkit-fill-available" }}>
                                     <ul style={{
                                         display: "flex",
-                                        justifyContent: "center"
+                                        justifyContent: "center",
+                                        flexWrap: "wrap"
                                     }}>
                                         {tweetList.map((tweet) => {
                                             return (
-                                                <div className="card text-center" style={{ margin: "5% 0%", width: "60%" }} key={tweet.id}>
+                                                <div className="card text-center" style={{ margin: "5% 0%", width: "60%",marginBottom: "-2%" }} key={tweet.id}>
                                                     <div className="card-header" style={{
                                                         display: "flex",
                                                         alignItems: "center",
@@ -231,7 +390,7 @@ const Profile = ({ isAuth, loggedUser }) => {
                                                         }}>{tweet.date}</span>
                                                     </div>
                                                     <div className="card-body">
-                                                        <h5 className="card-title">tweet id : {tweet.id}</h5>
+                                                        {/* <h5 className="card-title">tweet id : {tweet.id}</h5> */}
                                                         <p className="card-text">{tweet.tweet}</p>
                                                         <div style={{
                                                             display: "flex",
