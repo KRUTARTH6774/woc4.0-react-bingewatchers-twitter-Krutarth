@@ -1,0 +1,48 @@
+
+/* body{
+    background-image: url('https://images.unsplash.com/photo-1640449090006-c5c5003aaf3c?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80');
+    background-repeat: no-repeat;
+    background-size: cover;
+
+} */
+/* .App::before{
+    display: block;
+    position: absolute;
+    height: 100vh;
+    background-image: url('https://images.unsplash.com/photo-1640449090006-c5c5003aaf3c?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80');
+    background-repeat: no-repeat;
+    background-size: cover;
+} */
+
+.App {
+    position: relative;
+}
+  
+.App:before {
+    content: ' ';
+    display: block;
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100vh;
+    opacity: 0.6;
+    background: linear-gradient(-45deg , #EE7752,#E73C7E,#23A6D5,#23D5AB,#3c94e7);
+    background-size: 400% 400%;
+    animation: change 10s ease-in-out infinite;
+    /* background-position: 50% 0; */
+}
+@keyframes change {
+    0%{
+        background-position: 0 50%;
+    }
+    50%{
+        background-position: 100% 50%;
+    }
+    100%{
+        background-position: 0 50%;
+    }
+}
+.App-header {
+    position: relative;
+}

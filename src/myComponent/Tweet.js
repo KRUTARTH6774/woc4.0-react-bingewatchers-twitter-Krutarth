@@ -133,7 +133,7 @@ const Tweet = ({ loggedUser }) => {
                                             }}><Link to='/profile' onClick={() => { localStorage.setItem("ClickedProfile", tweet.userID) }} style={{ textDecoration: "none" }} >{tweet.userName}</Link></h5>
 
 
-                                            {tweet.userID === localStorage.getItem("currentUser") && <button className="btn btn-danger" style={{ width: "auto" }} onClick={() => { deleteTweet(tweet.id); }}>
+                                            {tweet.userID === localStorage.getItem("currentUser") && <button className="btn btn-danger" style={{ width: "auto",background: "black" }} onClick={() => { deleteTweet(tweet.id); }}>
                                                 <FaTrash />
                                             </button>}
                                             <br />

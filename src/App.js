@@ -27,7 +27,7 @@ function App() {
     <div className="App">
       <header className="App-header">
         <marquee width="100%" direction="left" height="30%">
-          This WebSite is still under construction so some of the functionalities doesn't work :(
+          <span style={{ color: "red" }}>This WebSite is still under construction so some of the functionalities may not work :(</span>
         </marquee>
         <Router>
           <Navbar signoutUser={signoutUser} isAuth={isAuth} />

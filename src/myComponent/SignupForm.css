@@ -8,7 +8,9 @@ input[type=text], input[type=password] {
   margin: 5px 0 22px 0;
   display: inline-block;
   border: none;
-  background: #f1f1f1;
+  background: linear-gradient(141deg, black 60%,white);
+  opacity: 0.6;
+  color: #ddd;
 }
 
 /* Add a background color when the inputs get focus */
@@ -19,16 +21,29 @@ input[type=text]:focus, input[type=password]:focus {
 
 /* Set a style for all buttons */
 button {
-  background-color: #04AA6D;
+  background: linear-gradient(-45deg , #EE7752,#E73C7E,#23A6D5,#23D5AB,#3c94e7);
   color: white;
+  position: relative;
   padding: 14px 20px;
+  animation: change1 10s ease-in-out infinite;
+  background-size: 400% 400%;
   margin: 8px 0;
   border: none;
   cursor: pointer;
   width: 100%;
   opacity: 0.9;
 }
-
+@keyframes change1 {
+  0%{
+      background-position: 0 50%;
+  }
+  50%{
+      background-position: 100% 50%;
+  }
+  100%{
+      background-position: 0 50%;
+  }
+}
 button:hover {
   opacity:1;
 }

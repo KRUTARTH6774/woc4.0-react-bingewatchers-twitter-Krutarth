@@ -7,19 +7,26 @@ const Navbar = ({ isAuth, signoutUser }) => {
         <>
             {localStorage.getItem("isAuth") ?
                 (
-                    <ul className="nav nav-pills mb-3" id="pills-tab" role="tablist">
-                        <Link to="/mainpage"><li className="nav-item" role="presentation" >
-                            <button href="/mainpage" className="nav-link btn btn-primary" id="pills-home-tab"  >Home</button>
-                        </li></Link>
-                        <Link to="/profile" onClick={() => { localStorage.setItem("ClickedProfile", localStorage.getItem("currentUser")) }}><li className="nav-item" role="presentation">
-                            <button  className="nav-link btn btn-primary" id="pills-profile-tab" type="button" onClick={()=>{localStorage.setItem("ClickedProfile",localStorage.getItem("currentUser"))}} >My Profile</button>
-                        </li></Link>
-                        <Link to="/trending"><li className="nav-item" role="presentation">
-                            <button  className="nav-link btn btn-primary" id="pills-profile-tab" type="button" >Trending</button>
-                        </li></Link>
+                    <ul className="nav justify-content-center" id="pills-tab" role="tablist">
+                        <li className="nav-item" role="presentation" >
+                            <Link to="/mainpage" className="nav-link active">
+                                <button>Home</button>
+                            </Link>
+                        </li>
                         <li className="nav-item" role="presentation">
-                            <button className="nav-link btn btn-primary" id="pills-contact-tab" data-bs-toggle="pill" data-bs-target="#pills-contact" type="button" role="tab"
-                            onClick={signoutUser} >Logout</button>
+                            <Link to="/profile" className="nav-link" >
+                                <button onClick={() => { localStorage.setItem("ClickedProfile", localStorage.getItem("currentUser")) }} >My Profile</button>
+                            </Link>
+                        </li>
+                        <li className="nav-item" role="presentation">
+                            <Link to="/trending" className="nav-link" >
+                                <button  >Trending</button>
+                            </Link>
+                        </li>
+                        <li className="nav-item" role="presentation">
+                            <div className="nav-link">
+                                <button onClick={signoutUser} >Logout</button>
+                            </div>
                         </li>
                     </ul>
 

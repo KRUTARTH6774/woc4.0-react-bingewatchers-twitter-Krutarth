@@ -59,7 +59,7 @@ const Profile = ({ isAuth, loggedUser }) => {
                 // console.log(UserData.Following.length);
                 // setCount(UserData.Followers ? UserData.Followers.length : 0);
                 // setFollowers(UserData.Followers);
-                let ptr = false;
+
                 for (let i = 0; i < (docSnap.data().Followers ? docSnap.data().Followers.length : 0); i++) {
 
                     if (localStorage.getItem("currentUser") === docSnap.data().Followers[i]) {
@@ -68,7 +68,7 @@ const Profile = ({ isAuth, loggedUser }) => {
                         let unFollow = document.getElementById("UnFollow")
                         unFollow.style.display = "block";
                         // localStorage.setItem("Follow", "true")
-                        ptr = true;
+
                         // console.log("62");
                         break;
                     }
@@ -77,17 +77,12 @@ const Profile = ({ isAuth, loggedUser }) => {
                         Follow.style.display = "block";
                         let unFollow = document.getElementById("UnFollow")
                         unFollow.style.display = "none";
-                        ptr = false;
+
                         // localStorage.setItem("Follow", "false")
                         // console.log("70");
                     }
                 }
-                if (ptr === true) {
-                    localStorage.setItem("Follow", "true")
-                }
-                else {
-                    localStorage.setItem("Follow", "false")
-                }
+                
                 // if(!docSnap.data().Followers ){
                 //     localStorage.setItem("Follow", "false");
                 //     console.log("false");
@@ -289,7 +284,7 @@ const Profile = ({ isAuth, loggedUser }) => {
                                                             marginLeft: "1%",
                                                             marginRight: "auto"
                                                         }}>{tweet.userName}</h5>
-                                                        <button className="btn btn-danger" style={{ width: "auto" }} onClick={() => { deleteTweet(tweet.id); }}>
+                                                        <button className="btn btn-danger" style={{ width: "auto",background: "black" }} onClick={() => { deleteTweet(tweet.id); }}>
                                                             <FaTrash />
                                                         </button>
                                                         <br />
@@ -379,9 +374,9 @@ const Profile = ({ isAuth, loggedUser }) => {
                                                             marginLeft: "1%",
                                                             marginRight: "auto"
                                                         }}>{tweet.userName}</h5>
-                                                        <button className="btn btn-danger" style={{ width: "auto" }} onClick={() => { deleteTweet(tweet.id); }}>
+                                                        {/* {tweet.userID === localStorage.getItem("ClickedProfile") &&<button className="btn btn-danger" style={{ width: "auto" }} onClick={() => { deleteTweet(tweet.id); }}>
                                                             <FaTrash />
-                                                        </button>
+                                                        </button>} */}
                                                         <br />
                                                         <span style={{
                                                             position: "absolute",

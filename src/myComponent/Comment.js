@@ -81,7 +81,7 @@ const Comment = ({ commentList, setCommentList, tweetID }) => {
                                                 alignItems: "baseline"
                                             }}>
                                                 {comment.userName}
-                                                {comment.userID === localStorage.getItem("currentUser") ? <button className="btn btn-danger" style={{ width: "auto",marginRight: "-104%" }} onClick={() => { deleteComment(comment.id); }}>
+                                                {comment.userID === localStorage.getItem("currentUser") ? <button className="btn btn-danger" style={{ width: "auto",marginRight: "-104%",background: "black" }} onClick={() => { deleteComment(comment.id); }}>
                                                     <FaTrash />
                                                 </button> : <div> </div>}
                                             </span>
