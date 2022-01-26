@@ -36,16 +36,21 @@ export const LoginForm = ({ setIsAuth, setLoginuserid, setLoginDetails, loginDet
     }
 
     const handleLogin = () => {
-        if (checkUser(userArr, userEmail, userPassword)) {
-            localStorage.setItem("isAuth", true);
-            setIsAuth(true);
-            navigate("/mainpage");
-        }
-        else {
-            alert('Email or Password is incorrect');
+        if (userEmail === "" || userPassword === "") {
+            alert("fill the data");
             setIsAuth(false);
         }
-
+        else {
+            if (checkUser(userArr, userEmail, userPassword)) {
+                localStorage.setItem("isAuth", true);
+                setIsAuth(true);
+                navigate("/mainpage");
+            }
+            else {
+                alert('Email or Password is incorrect');
+                setIsAuth(false);
+            }
+        }
     }
     useEffect(() => {
         const getusers = async () => {
@@ -85,20 +90,20 @@ export const LoginForm = ({ setIsAuth, setLoginuserid, setLoginDetails, loginDet
                 {/* <input type="password" value={userPassword} onChange={(e) => { setUserPassword(e.target.value) }} placeholder="Enter Password" name="psw" required autoComplete="on" /> */}
 
                 <div className="clearfix" style={
+                    {
+                        display: "flex",
+                        justifyContent: "center",
+                    }}>
+                    <button type="button" onClick={handleCancle} style={
                         {
-                            display: "flex",
-                            justifyContent: "center",
-                        }}>
-                        <button type="button" onClick={handleCancle} style={
-                            {
-                                width: "40%",
-                                padding: "14px 20px",
-                                backgroundColor: "#f44336",
-                                float: "left"
-                            }}
-                            className="cancelbtn1">Cancel</button>
-                        <button type="submit" className="signupbtn" onClick={handleLogin}>Login</button>
-                    </div>
+                            width: "40%",
+                            padding: "14px 20px",
+                            backgroundColor: "#f44336",
+                            float: "left"
+                        }}
+                        className="cancelbtn1">Cancel</button>
+                    <button type="submit" className="signupbtn" onClick={handleLogin}>Login</button>
+                </div>
 
                 {/* <button type="submit" onClick={handleLogin}>Login</button> */}
 

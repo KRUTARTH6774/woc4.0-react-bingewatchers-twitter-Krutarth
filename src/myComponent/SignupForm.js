@@ -45,37 +45,50 @@ const SignupForm = ({ setIsAuth }) => {
         }
     }
     const signupWithGoogle = async () => {
-        signInWithPopup(auth, provider).then((result) => {
-            if (checkUser(userEmailArr, result.user.email)) {
-                alert("user allready exist with this Email ID,Try to login")
-                setIsAuth(false);
-            }
-            else {
-                addDoc(signupCollectionRef, {
-                    Id: sno,
-                    userName: result.user.displayName,
-                    userEmail: result.user.email,
-                    userPhoneNumber: result.user.phoneNumber,
-                    userPassword: userPasswordWithGoogle,
-                });
-                // localStorage.setItem("isAuth", true);
-                // setIsAuth(true);
-                navigate("/login");
-            }
-        })
+        if (userPasswordWithGoogle === "") {
+            alert("create a new password !");
+            setIsAuth(false);
+        }
+        else {
+            signInWithPopup(auth, provider).then((result) => {
+                if (checkUser(userEmailArr, result.user.email)) {
+                    alert("user already exist with this Email ID,Try with different email ID")
+                    setIsAuth(false);
+                }
+                else {
+                    addDoc(signupCollectionRef, {
+                        Id: sno,
+                        userName: result.user.displayName,
+                        userEmail: result.user.email,
+                        userPhoneNumber: result.user.phoneNumber,
+                        userPassword: userPasswordWithGoogle,
+                    });
+                    // localStorage.setItem("isAuth", true);
+                    // setIsAuth(true);
+                    navigate("/login");
+                }
+            })
+        }
     }
 
     const signup = async (e) => {
         e.preventDefault();
-        if (checkUser(userEmailArr, userEmail)) {
-            alert("user allready exist with this Email ID,Try to login")
+        if (userName === "" || userEmail === "" || userPassword === "") {
+            alert("fill the data");
             setIsAuth(false);
         }
         else {
-            await addDoc(signupCollectionRef, { Id: sno, userName, userEmail, userPhoneNumber, userPassword });
-            // localStorage.setItem("isAuth", true);
-            // setIsAuth(true);
-            navigate("/login");
+            if (checkUser(userEmailArr, userEmail)) {
+                alert("user allready exist with this Email ID,Try to login")
+                setIsAuth(false);
+            }
+            else {
+
+                await addDoc(signupCollectionRef, { Id: sno, userName, userEmail, userPhoneNumber, userPassword });
+                // localStorage.setItem("isAuth", true);
+                // setIsAuth(true);
+                navigate("/login");
+            }
         }
     }
 
