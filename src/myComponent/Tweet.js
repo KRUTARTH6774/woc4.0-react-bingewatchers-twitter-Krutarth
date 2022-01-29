@@ -133,9 +133,12 @@ const Tweet = ({ loggedUser }) => {
                                             }}><Link to='/profile' onClick={() => { localStorage.setItem("ClickedProfile", tweet.userID) }} style={{ textDecoration: "none" }} >{tweet.userName}</Link></h5>
 
 
-                                            {tweet.userID === localStorage.getItem("currentUser") && <button className="btn btn-danger" style={{ width: "auto",background: "black" }} onClick={() => { deleteTweet(tweet.id); }}>
+                                            {tweet.userID === localStorage.getItem("currentUser") &&
+                                                <FaTrash size="1.5em" color="red" type="button" onClick={() => { deleteTweet(tweet.id); }} />
+                                            }
+                                            {/* {tweet.userID === localStorage.getItem("currentUser") && <button className="btn btn-danger" style={{ width: "auto", background: "black" }} onClick={() => { deleteTweet(tweet.id); }}>
                                                 <FaTrash />
-                                            </button>}
+                                            </button>} */}
                                             <br />
                                             <span style={{
                                                 position: "absolute",
@@ -145,24 +148,26 @@ const Tweet = ({ loggedUser }) => {
                                         </div>
 
                                         <div className="card-body">
-                                            
-                                            <p className="card-text">{tweet.tweet}</p>
+
+                                            <p className="card-text" style={{fontSize:"35px"}}>{tweet.tweet}</p>
 
 
 
                                             <div style={{
                                                 display: "flex",
-                                                alignItems: "baseline",
-                                                justifyContent: "space-between"
+                                                justifyContent: "end",
+                                                marginBottom : "1%"
                                             }}>
-                                                <AddComment tweet={tweet} setCommentList={setCommentList} loggedUser={loggedUser} />
+                                                {/* <AddComment tweet={tweet} setCommentList={setCommentList} loggedUser={loggedUser} /> */}
                                                 {/* <span>{tweet.date}</span> */}
-                                                <button className="btn btn-primary btn-border-width" type="button" onClick={() => { myFunction(tweet.id) }} style={{ width: "auto" }}>
-                                                    <AiOutlineComment size="2em" />
-                                                </button>
+                                                {/* <button className="btn btn-primary btn-border-width" type="button" onClick={() => { myFunction(tweet.id) }} style={{ width: "auto", border: "none", background: "white" }}>
+                                                    <AiOutlineComment size="2em" color="black" />
+                                                </button> */}
+                                                <AiOutlineComment size="2em" color="black" type="button" onClick={() => { myFunction(tweet.id) }} />
                                             </div>
                                             <div className="collapse" id={tweet.id}>
                                                 <div className="card card-body">
+                                                    <AddComment tweet={tweet} setCommentList={setCommentList} loggedUser={loggedUser} />
                                                     <Comment commentList={commentList} setCommentList={setCommentList} tweetID={tweet.id} />
                                                 </div>
                                             </div>
@@ -181,7 +186,7 @@ const Tweet = ({ loggedUser }) => {
                     display: "flex",
                     margin: "auto"
                 }}>
-                    <span className="visually-hidden">Loading...</span>
+                    <span className="visually-hidden"></span>
                 </div>
             }
         </>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { MdAddComment } from "react-icons/md";
+import { MdAddBox } from "react-icons/md";
 import { addDoc, query, orderBy, getDocs, collection } from "firebase/firestore";
 import { db } from "../firebase-config";
 const AddComment = ({ tweet, setCommentList, loggedUser }) => {
@@ -43,15 +43,17 @@ const AddComment = ({ tweet, setCommentList, loggedUser }) => {
 
         <div className="comment" style={{
             display: "flex",
-            alignItems: "baseline",
-            width: "90%"
+            alignItems: "baseline"
         }}>
             <input type="text"
                 name={tweet.id}
                 className="form-control" placeholder="Add your comment..." value={comment} onChange={(e) => { setComment(e.target.value) }}
             />
-            <button className="btn btn-dark" style={{ width: "auto" }}
-                onClick={(e) => { handleComment(e, tweet.id) }}><MdAddComment size="2.5em" /></button>
+            <div>
+                <MdAddBox size="4em" onClick={(e) => { handleComment(e, tweet.id) }} type="button" />
+            </div>
+            {/* <button className="btn btn-dark" style={{ width: "auto" }}
+                onClick={(e) => { handleComment(e, tweet.id) }}><MdAddComment size="2.5em" /></button> */}
         </div>
     )
 }

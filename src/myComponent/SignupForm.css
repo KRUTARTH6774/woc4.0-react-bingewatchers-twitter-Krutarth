@@ -21,19 +21,21 @@ input[type=text]:focus, input[type=password]:focus {
 
 /* Set a style for all buttons */
 button {
-  background: linear-gradient(-45deg , #EE7752,#E73C7E,#23A6D5,#23D5AB,#3c94e7);
+  /* background: linear-gradient(-45deg , #EE7752,#E73C7E,#23A6D5,#23D5AB,#3c94e7); */
+  background-color:black;
+  border: 0px solid red;
+  border-radius: 36px;
   color: white;
   position: relative;
   padding: 14px 20px;
-  animation: change1 10s ease-in-out infinite;
+  /* animation: change1 10s ease-in-out infinite; */
   background-size: 400% 400%;
   margin: 8px 0;
-  border: none;
   cursor: pointer;
   width: 100%;
   opacity: 0.9;
 }
-@keyframes change1 {
+/* @keyframes change1 {
   0%{
       background-position: 0 50%;
   }
@@ -43,7 +45,7 @@ button {
   100%{
       background-position: 0 50%;
   }
-}
+} */
 button:hover {
   opacity:1;
 }

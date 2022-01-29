@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { collection, getDocs, getDoc, query, orderBy, updateDoc, doc, deleteDoc, where, arrayUnion, arrayRemove } from "firebase/firestore";
 import { db } from "../firebase-config";
 import { BsPersonCircle } from "react-icons/bs";
+import { RiEditLine } from "react-icons/ri";
+import { MdCancel } from "react-icons/md";
 import Comment from "./Comment";
 import AddComment from './AddComment';
 import { AiOutlineComment } from "react-icons/ai";
@@ -82,7 +84,7 @@ const Profile = ({ isAuth, loggedUser }) => {
                         // console.log("70");
                     }
                 }
-                
+
                 // if(!docSnap.data().Followers ){
                 //     localStorage.setItem("Follow", "false");
                 //     console.log("false");
@@ -126,62 +128,70 @@ const Profile = ({ isAuth, loggedUser }) => {
         var userRef = doc(db, "users", localStorage.getItem("ClickedProfile"));
     }
 
-        const UpdateFollowUser = async () => {
-            await updateDoc(LoggedUserRef, {
-                Following: arrayUnion(UserData.id)
-            });
-            await updateDoc(userRef, {
-                Followers: arrayUnion(localStorage.getItem("currentUser"))
-            });
-        }
-        const DeleteFollowUser = async () => {
-            await updateDoc(LoggedUserRef, {
-                Following: arrayRemove(UserData.id)
-            });
-            await updateDoc(userRef, {
-                Followers: arrayRemove(localStorage.getItem("currentUser"))
-            });
-        }
-    
+    const UpdateFollowUser = async () => {
+        await updateDoc(LoggedUserRef, {
+            Following: arrayUnion(UserData.id)
+        });
+        await updateDoc(userRef, {
+            Followers: arrayUnion(localStorage.getItem("currentUser"))
+        });
+    }
+    const DeleteFollowUser = async () => {
+        await updateDoc(LoggedUserRef, {
+            Following: arrayRemove(UserData.id)
+        });
+        await updateDoc(userRef, {
+            Followers: arrayRemove(localStorage.getItem("currentUser"))
+        });
+    }
+    const [userName, setUserName] = useState("");
+    const ToggleToInputUpdateUserName = async () => {
+        document.getElementById("username").style.display = "none";
+        document.getElementById("editname").style.display = "flex";
+        // await updateDoc(LoggedUserRef, {
+        //     userName: arrayUnion(UserData.id)
+        // });
+    }
 
-        const handleFollowers = (e) => {
-            e.preventDefault();
-            localStorage.setItem("Follow", "true")
-            let Follow = document.getElementById("Follow");
-            let unFollow = document.getElementById("UnFollow")
-            Follow.style.display = "none";
-            unFollow.style.display = "block";
-            // setCount(count + 1);
-            setFollowers(Followers + 1);
-            // console.log("+1");
-            UpdateFollowUser();
-            // if (document.getElementById("Follow").innerHTML === "Follow") {
-            //     document.getElementById("Follow").innerHTML = "Following";
-            //     // document.getElementById("FsV").innerHTML = UserData.Followers ? UserData.Followers.length : '0';
-            //     document.getElementById("Follow").style.backgroundColor = "red"
 
-            //     UpdateFollowUser();
+    const handleFollowers = (e) => {
+        e.preventDefault();
+        localStorage.setItem("Follow", "true")
+        let Follow = document.getElementById("Follow");
+        let unFollow = document.getElementById("UnFollow")
+        Follow.style.display = "none";
+        unFollow.style.display = "block";
+        // setCount(count + 1);
+        setFollowers(Followers + 1);
+        // console.log("+1");
+        UpdateFollowUser();
+        // if (document.getElementById("Follow").innerHTML === "Follow") {
+        //     document.getElementById("Follow").innerHTML = "Following";
+        //     // document.getElementById("FsV").innerHTML = UserData.Followers ? UserData.Followers.length : '0';
+        //     document.getElementById("Follow").style.backgroundColor = "red"
 
-            // }
-            // else if (document.getElementById("Follow").innerHTML === "Following") {
-            //     document.getElementById("Follow").innerHTML = "Follow";
-            //     document.getElementById("Follow").style.backgroundColor = "Blue";
-            //     DeleteFollowUser();
-            // }
-        }
+        //     UpdateFollowUser();
 
-        const handleUnFollow = (e) => {
-            e.preventDefault();
-            localStorage.setItem("Follow", "false")
-            let Follow = document.getElementById("Follow");
-            let unFollow = document.getElementById("UnFollow")
-            Follow.style.display = "block";
-            unFollow.style.display = "none";
-            // setCount(count - 1);
-            setFollowers(Followers - 1);
-            DeleteFollowUser();
-        }
-    
+        // }
+        // else if (document.getElementById("Follow").innerHTML === "Following") {
+        //     document.getElementById("Follow").innerHTML = "Follow";
+        //     document.getElementById("Follow").style.backgroundColor = "Blue";
+        //     DeleteFollowUser();
+        // }
+    }
+
+    const handleUnFollow = (e) => {
+        e.preventDefault();
+        localStorage.setItem("Follow", "false")
+        let Follow = document.getElementById("Follow");
+        let unFollow = document.getElementById("UnFollow")
+        Follow.style.display = "block";
+        unFollow.style.display = "none";
+        // setCount(count - 1);
+        setFollowers(Followers - 1);
+        DeleteFollowUser();
+    }
+
     // useEffect(()=>{
     //     setCount(UserData.Followers ? UserData.Followers.length : 0);
     // },[count])
@@ -245,8 +255,24 @@ const Profile = ({ isAuth, loggedUser }) => {
                                                     <div className="pro-img">
                                                         <BsPersonCircle size="6em" />
                                                     </div>
-                                                    <h3 className="m-b-0">{UserData.userName}</h3>
-                                                    <p>Web Designer &amp; Developer</p>
+                                                    <div id="username" style={{
+                                                        display: "flex",
+                                                        justifyContent: "center",
+                                                        alignItems: "baseline"
+                                                    }}>
+                                                        <h3 className="m-b-0" >{UserData.userName}</h3>
+
+                                                        <RiEditLine size="1.2em" type="button" onClick={() => { ToggleToInputUpdateUserName() }} />
+                                                    </div>
+                                                    <div id="editname" style={{
+                                                        display: "none",
+                                                        justifyContent: "center",
+                                                        alignItems: "baseline"
+                                                    }}>
+                                                        <input type="text" value={userName} onChange={(e) => { setUserName(e.target.value) }} placeholder="Enter Username" name="username" required />
+                                                        <MdCancel size="3em" onClick={() => { document.getElementById("username").style.display = "flex"; document.getElementById("editname").style.display = "none";setUserName("") }} />
+                                                    </div>
+                                                    {/* <p>Web Designer &amp; Developer</p> */}
                                                     {/* <button className="m-t-10 waves-effect waves-dark btn btn-primary btn-md btn-rounded" >Follow</button> */}
                                                     <div className="row text-center m-t-20">
                                                         <div className="col-lg-4 col-md-4 m-t-20">
@@ -272,7 +298,7 @@ const Profile = ({ isAuth, loggedUser }) => {
                                     }}>
                                         {tweetList.map((tweet) => {
                                             return (
-                                                <div className="card text-center" style={{ margin: "5% 0%", width: "60%",marginBottom: "-2%" }} key={tweet.id}>
+                                                <div className="card text-center" style={{ margin: "5% 0%", width: "60%", marginBottom: "-2%" }} key={tweet.id}>
                                                     <div className="card-header" style={{
                                                         display: "flex",
                                                         alignItems: "center",
@@ -283,14 +309,16 @@ const Profile = ({ isAuth, loggedUser }) => {
                                                             fontWeight: "bold",
                                                             marginLeft: "1%",
                                                             marginRight: "auto"
-                                                        }}>{tweet.userName}</h5>
-                                                        <button className="btn btn-danger" style={{ width: "auto",background: "black" }} onClick={() => { deleteTweet(tweet.id); }}>
+                                                        }}>{tweet.userName}
+                                                        </h5>
+                                                        {/* <button className="btn btn-danger" style={{ width: "auto", background: "black" }} onClick={() => { deleteTweet(tweet.id); }}>
                                                             <FaTrash />
-                                                        </button>
+                                                        </button> */}
+                                                        <FaTrash size="1.5em" color="red" type="button" onClick={() => { deleteTweet(tweet.id); }} />
                                                         <br />
                                                         <span style={{
                                                             position: "absolute",
-                                                            marginLeft: "8.2%",
+                                                            marginLeft: "7%",
                                                             marginTop: "3.5%"
                                                         }}>{tweet.date}</span>
                                                     </div>
@@ -299,16 +327,15 @@ const Profile = ({ isAuth, loggedUser }) => {
                                                         <p className="card-text">{tweet.tweet}</p>
                                                         <div style={{
                                                             display: "flex",
-                                                            alignItems: "baseline",
-                                                            justifyContent: "space-between"
+                                                            justifyContent: "end",
+                                                            marginBottom: "1%"
                                                         }}>
-                                                            <AddComment tweet={tweet} setCommentList={setCommentList} loggedUser={loggedUser} />
-                                                            <button className="btn btn-primary btn-border-width" type="button" onClick={() => { myFunction(tweet.id) }} style={{ width: "auto" }}>
-                                                                <AiOutlineComment size="2em" />
-                                                            </button>
+                                                            <AiOutlineComment size="2em" color="black" type="button" onClick={() => { myFunction(tweet.id) }} />
+
                                                         </div>
                                                         <div className="collapse" id={tweet.id}>
                                                             <div className="card card-body">
+                                                                <AddComment tweet={tweet} setCommentList={setCommentList} loggedUser={loggedUser} />
                                                                 <Comment commentList={commentList} setCommentList={setCommentList} tweetID={tweet.id} />
                                                             </div>
                                                         </div>
@@ -335,7 +362,7 @@ const Profile = ({ isAuth, loggedUser }) => {
                                                         <BsPersonCircle size="6em" />
                                                     </div>
                                                     <h3 className="m-b-0">{UserData.userName}</h3>
-                                                    <p>Web Designer &amp; Developer</p>
+                                                    {/* <p>Web Designer &amp; Developer</p> */}
                                                     <button className="m-t-10 waves-effect waves-dark btn btn-primary btn-md btn-rounded" id="Follow" onClick={(e) => { handleFollowers(e) }} >Follow</button>
                                                     <button className="m-t-10 waves-effect waves-dark btn btn-primary btn-md btn-rounded" style={{ display: "none", backgroundColor: "red" }} id="UnFollow" onClick={(e) => { handleUnFollow(e) }} >Unfollow</button>
                                                     <div className="row text-center m-t-20">
@@ -362,7 +389,7 @@ const Profile = ({ isAuth, loggedUser }) => {
                                     }}>
                                         {tweetList.map((tweet) => {
                                             return (
-                                                <div className="card text-center" style={{ margin: "5% 0%", width: "60%",marginBottom: "-2%" }} key={tweet.id}>
+                                                <div className="card text-center" style={{ margin: "5% 0%", width: "60%", marginBottom: "-2%" }} key={tweet.id}>
                                                     <div className="card-header" style={{
                                                         display: "flex",
                                                         alignItems: "center",
@@ -374,31 +401,26 @@ const Profile = ({ isAuth, loggedUser }) => {
                                                             marginLeft: "1%",
                                                             marginRight: "auto"
                                                         }}>{tweet.userName}</h5>
-                                                        {/* {tweet.userID === localStorage.getItem("ClickedProfile") &&<button className="btn btn-danger" style={{ width: "auto" }} onClick={() => { deleteTweet(tweet.id); }}>
-                                                            <FaTrash />
-                                                        </button>} */}
                                                         <br />
                                                         <span style={{
                                                             position: "absolute",
-                                                            marginLeft: "8.2%",
+                                                            marginLeft: "7%",
                                                             marginTop: "3.5%"
                                                         }}>{tweet.date}</span>
                                                     </div>
                                                     <div className="card-body">
-                                                        {/* <h5 className="card-title">tweet id : {tweet.id}</h5> */}
                                                         <p className="card-text">{tweet.tweet}</p>
                                                         <div style={{
                                                             display: "flex",
-                                                            alignItems: "baseline",
-                                                            justifyContent: "space-between"
+                                                            justifyContent: "end",
+                                                            marginBottom: "1%"
                                                         }}>
-                                                            <AddComment tweet={tweet} setCommentList={setCommentList} loggedUser={loggedUser} />
-                                                            <button className="btn btn-primary btn-border-width" type="button" onClick={() => { myFunction(tweet.id) }} style={{ width: "auto" }}>
-                                                                <AiOutlineComment size="2em" />
-                                                            </button>
+                                                            <AiOutlineComment size="2em" color="black" type="button" onClick={() => { myFunction(tweet.id) }} />
+
                                                         </div>
                                                         <div className="collapse" id={tweet.id}>
                                                             <div className="card card-body">
+                                                                <AddComment tweet={tweet} setCommentList={setCommentList} loggedUser={loggedUser} />
                                                                 <Comment commentList={commentList} setCommentList={setCommentList} tweetID={tweet.id} />
                                                             </div>
                                                         </div>

@@ -3,6 +3,7 @@ import './LoginForm.css'
 import { getDocs, collection } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 import { db } from "../firebase-config";
+import { width } from 'dom-helpers';
 export const LoginForm = ({ setIsAuth, setLoginuserid, setLoginDetails, loginDetails }) => {
     const navigate = useNavigate();
     const [userEmail, setUserEmail] = useState("");
@@ -35,9 +36,13 @@ export const LoginForm = ({ setIsAuth, setLoginuserid, setLoginDetails, loginDet
         }
     }
 
-    const handleLogin = () => {
+    const handleLogin = (e) => {
+        e.preventDefault();
         if (userEmail === "" || userPassword === "") {
-            alert("fill the data");
+            document.getElementById("empty").style.display = "block";
+            document.getElementById("worning").style.display = "none";
+            document.getElementById("email").style.border = "none";
+            document.getElementById("password").style.border = "none";
             setIsAuth(false);
         }
         else {
@@ -47,7 +52,11 @@ export const LoginForm = ({ setIsAuth, setLoginuserid, setLoginDetails, loginDet
                 navigate("/mainpage");
             }
             else {
-                alert('Email or Password is incorrect');
+                document.getElementById("email").style.border = "6px solid red";
+                document.getElementById("password").style.border = "6px solid red";
+                document.getElementById("empty").style.display = "none";
+                document.getElementById("worning").style.display = "block";
+                // alert('Email or Password is incorrect');
                 setIsAuth(false);
             }
         }
@@ -74,17 +83,23 @@ export const LoginForm = ({ setIsAuth, setLoginuserid, setLoginDetails, loginDet
                 <h1>Log in</h1>
                 <hr />
                 <label htmlFor="email"><b>Email-ID</b></label>
-                <input type="text" value={userEmail} onChange={(e) => { setUserEmail(e.target.value) }} placeholder="Enter Email" name="email" required />
+                <input type="text" id="email" value={userEmail} onChange={(e) => { setUserEmail(e.target.value) }} placeholder="Enter Email" name="email" required />
 
                 {/* <label htmlFor="uname" style={{ color: "black" }}><b>Email-ID</b></label> */}
                 {/* <input type="text" value={userEmail} onChange={(e) => { setUserEmail(e.target.value) }} placeholder="Enter Email-ID" name="uname" required /> */}
 
 
-                <label htmlFor="psw"><b>Password</b></label>
-                <input type="password" value={userPassword} onChange={(e) => { setUserPassword(e.target.value) }} placeholder="Enter Password" name="psw" required autoComplete="on" />
+                <label htmlFor="psw" ><b>Password</b></label>
+                <input type="password" id="password" value={userPassword} onChange={(e) => { setUserPassword(e.target.value) }} placeholder="Enter Password" name="psw" required autoComplete="on" />
 
-
-
+                <div style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    color: "red"
+                }}>
+                    <h5 id="worning" style={{ display: "none" }}>Email or Password that you've entered is incorrect.</h5>
+                    <h5 id="empty" style={{ display: "none" }}>Sorry, we could not find your account.</h5>
+                </div>
 
                 {/* <label htmlFor="psw" style={{ color: "black" }}><b>Password</b></label> */}
                 {/* <input type="password" value={userPassword} onChange={(e) => { setUserPassword(e.target.value) }} placeholder="Enter Password" name="psw" required autoComplete="on" /> */}
@@ -98,11 +113,11 @@ export const LoginForm = ({ setIsAuth, setLoginuserid, setLoginDetails, loginDet
                         {
                             width: "40%",
                             padding: "14px 20px",
-                            backgroundColor: "#f44336",
+                            backgroundColor: "firebrick",
                             float: "left"
                         }}
                         className="cancelbtn1">Cancel</button>
-                    <button type="submit" className="signupbtn" onClick={handleLogin}>Login</button>
+                    <button type="submit" className="signupbtn" style={{ backgroundColor: "#007e7e" }} onClick={handleLogin}>Login</button>
                 </div>
 
                 {/* <button type="submit" onClick={handleLogin}>Login</button> */}

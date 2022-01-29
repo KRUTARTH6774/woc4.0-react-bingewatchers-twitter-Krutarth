@@ -144,11 +144,11 @@ const SignupForm = ({ setIsAuth }) => {
                             {
                                 width: "40%",
                                 padding: "14px 20px",
-                                backgroundColor: "#f44336",
+                                backgroundColor:"firebrick",
                                 float: "left"
                             }}
                             className="cancelbtn1">Cancel</button>
-                        <button type="submit" className="signupbtn" onClick={signup}>Sign Up</button>
+                        <button type="submit" className="signupbtn" style={{backgroundColor:"#007e7e"}} onClick={signup}>Sign Up</button>
                     </div>
 
                 </div>

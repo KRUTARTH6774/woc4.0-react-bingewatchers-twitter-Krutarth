@@ -14,7 +14,6 @@
     font-size: 16px;
     color: #262626;
     margin-bottom: 15px;
-    font-family: 'Conv_helveticaneuecyr-bold';
 }
 
 .be-img-comment {
@@ -45,9 +44,7 @@
     font-family: 'Conv_helveticaneuecyr-bold';
 }
 
-.be-comment-content a {
-    color: #383b43;
-}
+
 
 .be-comment-content span {
     display: inline-block;
