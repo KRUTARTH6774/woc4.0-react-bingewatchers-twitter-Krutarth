@@ -45,7 +45,7 @@ const AddComment = ({ tweet, setCommentList, loggedUser }) => {
             display: "flex",
             alignItems: "baseline"
         }}>
-            <input type="text"
+            <input type="text" style={{color: "white"}}
                 name={tweet.id}
                 className="form-control" placeholder="Add your comment..." value={comment} onChange={(e) => { setComment(e.target.value) }}
             />

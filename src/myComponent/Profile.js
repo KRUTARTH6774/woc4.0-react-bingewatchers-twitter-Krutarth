@@ -19,28 +19,9 @@ const Profile = ({ isAuth, loggedUser }) => {
     if (!isAuth) {
         navigate("/");
     }
-    // else {
-    //Clicked User Data
-
-
-
-
-
 
     const [Followers, setFollowers] = useState(0)
     const [Following, setFollowing] = useState(0)
-
-    // const setUserProfile = async () => {
-    //     const docSnap = await getDoc(userRef);
-    //     setUserData({ ...docSnap.data(), id: localStorage.getItem("ClickedProfile") });
-    //     setLoading(true);
-    //     setCount(UserData.Followers ? UserData.Followers.length : 0);
-    //     setFollowers(UserData.Followers ? UserData.Followers.length : 0);
-    //     setFollowing(UserData.Following ? UserData.Following.length : 0);
-    //     setFollowers(UserData.Followers);
-    //     checkForFollow();
-    // }
-    // setUserProfile();
 
     useEffect(() => {
         if (!isAuth) {
@@ -52,15 +33,9 @@ const Profile = ({ isAuth, loggedUser }) => {
                 const docSnap = await getDoc(userRef);
                 setUserData({ ...docSnap.data(), id: localStorage.getItem("ClickedProfile") });
                 setLoading(true);
+                
                 setFollowers(docSnap.data().Followers ? docSnap.data().Followers.length : 0);
                 setFollowing(docSnap.data().Following ? docSnap.data().Following.length : 0);
-                // if(docSnap.data().Followers.length === 0){
-                //     localStorage.setItem("Follow", "false")
-                //     console.log("line : 50");
-                // }
-                // console.log(UserData.Following.length);
-                // setCount(UserData.Followers ? UserData.Followers.length : 0);
-                // setFollowers(UserData.Followers);
 
                 for (let i = 0; i < (docSnap.data().Followers ? docSnap.data().Followers.length : 0); i++) {
 
@@ -69,9 +44,6 @@ const Profile = ({ isAuth, loggedUser }) => {
                         Follow.style.display = "none";
                         let unFollow = document.getElementById("UnFollow")
                         unFollow.style.display = "block";
-                        // localStorage.setItem("Follow", "true")
-
-                        // console.log("62");
                         break;
                     }
                     else {
@@ -79,16 +51,8 @@ const Profile = ({ isAuth, loggedUser }) => {
                         Follow.style.display = "block";
                         let unFollow = document.getElementById("UnFollow")
                         unFollow.style.display = "none";
-
-                        // localStorage.setItem("Follow", "false")
-                        // console.log("70");
                     }
                 }
-
-                // if(!docSnap.data().Followers ){
-                //     localStorage.setItem("Follow", "false");
-                //     console.log("false");
-                // }
 
                 const data = await getDocs(q);
                 setTweetList(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
@@ -98,31 +62,6 @@ const Profile = ({ isAuth, loggedUser }) => {
         }
     }, [])
 
-    // const temp = ()=>{
-    //     setFollowers(UserData.Followers ? UserData.Followers.length : 0);
-    //     setFollowing(UserData.Following ? UserData.Following.length : 0);
-    // }
-    // temp();
-
-    // useEffect(() => {
-    //     const getTweet = async () => {
-    //         // const docSnap = await getDoc(userRef);
-    //         // setUserData({ ...docSnap.data(), id: localStorage.getItem("ClickedProfile") });
-    //         // setLoading(true);
-    //         // // setCount(UserData.Followers ? UserData.Followers.length : 0);
-    //         // setFollowers(UserData.Followers ? UserData.Followers.length : 0);
-    //         // setFollowing(UserData.Following ? UserData.Following.length : 0);
-    //         // setFollowers(UserData.Followers);
-    //         // checkForFollow();
-
-    //         const data = await getDocs(q);
-    //         setTweetList(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
-    //         setLoading(true);
-
-    //     }
-    //     getTweet();
-
-    // }, []);
     if (localStorage.getItem("currentUser")) {
         var LoggedUserRef = doc(db, "users", localStorage.getItem("currentUser"));
         var userRef = doc(db, "users", localStorage.getItem("ClickedProfile"));
@@ -161,23 +100,9 @@ const Profile = ({ isAuth, loggedUser }) => {
         let unFollow = document.getElementById("UnFollow")
         Follow.style.display = "none";
         unFollow.style.display = "block";
-        // setCount(count + 1);
+
         setFollowers(Followers + 1);
-        // console.log("+1");
         UpdateFollowUser();
-        // if (document.getElementById("Follow").innerHTML === "Follow") {
-        //     document.getElementById("Follow").innerHTML = "Following";
-        //     // document.getElementById("FsV").innerHTML = UserData.Followers ? UserData.Followers.length : '0';
-        //     document.getElementById("Follow").style.backgroundColor = "red"
-
-        //     UpdateFollowUser();
-
-        // }
-        // else if (document.getElementById("Follow").innerHTML === "Following") {
-        //     document.getElementById("Follow").innerHTML = "Follow";
-        //     document.getElementById("Follow").style.backgroundColor = "Blue";
-        //     DeleteFollowUser();
-        // }
     }
 
     const handleUnFollow = (e) => {
@@ -187,15 +112,9 @@ const Profile = ({ isAuth, loggedUser }) => {
         let unFollow = document.getElementById("UnFollow")
         Follow.style.display = "block";
         unFollow.style.display = "none";
-        // setCount(count - 1);
         setFollowers(Followers - 1);
         DeleteFollowUser();
     }
-
-    // useEffect(()=>{
-    //     setCount(UserData.Followers ? UserData.Followers.length : 0);
-    // },[count])
-    //Clicked user Tweets
     const tweetCollectionRef = collection(db, "tweet");
     const q = query(tweetCollectionRef, where("userID", "==", localStorage.getItem("ClickedProfile")));
     const [tweetList, setTweetList] = useState([]);
@@ -207,14 +126,11 @@ const Profile = ({ isAuth, loggedUser }) => {
     const deleteTweet = async (tweetID) => {
         const tweetDoc = doc(db, "tweet", tweetID)
         await deleteDoc(tweetDoc);
-        // const commentDoc = doc(db, "comments", tweetID)
-        // await deleteDoc(commentDoc);
         const q2 = query(commentCollectionRef, where("tweetID", "==", tweetID))
-        // await deleteDoc(q2)
+
         const querySnapshot = await getDocs(q2);
         querySnapshot.forEach((doc1) => {
-            // doc.data() is never undefined for query doc snapshots
-            // console.log(doc.id, " => ", doc.data());
+
             const commentDoc = doc(db, "comments", doc1.id)
             deleteDoc(commentDoc);
         });
@@ -270,7 +186,7 @@ const Profile = ({ isAuth, loggedUser }) => {
                                                         alignItems: "baseline"
                                                     }}>
                                                         <input type="text" value={userName} onChange={(e) => { setUserName(e.target.value) }} placeholder="Enter Username" name="username" required />
-                                                        <MdCancel size="3em" onClick={() => { document.getElementById("username").style.display = "flex"; document.getElementById("editname").style.display = "none";setUserName("") }} />
+                                                        <MdCancel size="3em" onClick={() => { document.getElementById("username").style.display = "flex"; document.getElementById("editname").style.display = "none"; setUserName("") }} />
                                                     </div>
                                                     {/* <p>Web Designer &amp; Developer</p> */}
                                                     {/* <button className="m-t-10 waves-effect waves-dark btn btn-primary btn-md btn-rounded" >Follow</button> */}
@@ -311,9 +227,6 @@ const Profile = ({ isAuth, loggedUser }) => {
                                                             marginRight: "auto"
                                                         }}>{tweet.userName}
                                                         </h5>
-                                                        {/* <button className="btn btn-danger" style={{ width: "auto", background: "black" }} onClick={() => { deleteTweet(tweet.id); }}>
-                                                            <FaTrash />
-                                                        </button> */}
                                                         <FaTrash size="1.5em" color="red" type="button" onClick={() => { deleteTweet(tweet.id); }} />
                                                         <br />
                                                         <span style={{
@@ -323,7 +236,6 @@ const Profile = ({ isAuth, loggedUser }) => {
                                                         }}>{tweet.date}</span>
                                                     </div>
                                                     <div className="card-body">
-                                                        {/* <h5 className="card-title">tweet id : {tweet.id}</h5> */}
                                                         <p className="card-text">{tweet.tweet}</p>
                                                         <div style={{
                                                             display: "flex",

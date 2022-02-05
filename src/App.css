@@ -27,9 +27,9 @@
     width: 100%;
     height: 100vh;
     opacity: 0.6;
-    background: linear-gradient(-45deg , #EE7752,#E73C7E,#23A6D5,#23D5AB,#3c94e7);
+    background: linear-gradient(-45deg , #EE7752,#E73C7E,#23A6D5,#23D5AB,#bf3ce7);
     background-size: 400% 400%;
-    animation: change 10s ease-in-out infinite;
+    /* animation: change 10s ease-in-out infinite; */
     /* background-position: 50% 0; */
 }
 @keyframes change {
