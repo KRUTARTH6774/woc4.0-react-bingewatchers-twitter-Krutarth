@@ -85,9 +85,6 @@ export const LoginForm = ({ setIsAuth, setLoginuserid, setLoginDetails, loginDet
                 <label htmlFor="email"><b>Email-ID</b></label>
                 <input type="text" id="email" value={userEmail} onChange={(e) => { setUserEmail(e.target.value) }} placeholder="Enter Email" name="email" required />
 
-                {/* <label htmlFor="uname" style={{ color: "black" }}><b>Email-ID</b></label> */}
-                {/* <input type="text" value={userEmail} onChange={(e) => { setUserEmail(e.target.value) }} placeholder="Enter Email-ID" name="uname" required /> */}
-
 
                 <label htmlFor="psw" ><b>Password</b></label>
                 <input type="password" id="password" value={userPassword} onChange={(e) => { setUserPassword(e.target.value) }} placeholder="Enter Password" name="psw" required autoComplete="on" />
@@ -100,9 +97,6 @@ export const LoginForm = ({ setIsAuth, setLoginuserid, setLoginDetails, loginDet
                     <h5 id="worning" style={{ display: "none" }}>Email or Password that you've entered is incorrect.</h5>
                     <h5 id="empty" style={{ display: "none" }}>Sorry, we could not find your account.</h5>
                 </div>
-
-                {/* <label htmlFor="psw" style={{ color: "black" }}><b>Password</b></label> */}
-                {/* <input type="password" value={userPassword} onChange={(e) => { setUserPassword(e.target.value) }} placeholder="Enter Password" name="psw" required autoComplete="on" /> */}
 
                 <div className="clearfix" style={
                     {
@@ -120,21 +114,7 @@ export const LoginForm = ({ setIsAuth, setLoginuserid, setLoginDetails, loginDet
                     <button type="submit" className="signupbtn" style={{ backgroundColor: "#007e7e" }} onClick={handleLogin}>Login</button>
                 </div>
 
-                {/* <button type="submit" onClick={handleLogin}>Login</button> */}
-
-
-
             </div>
-
-            {/* <div className="container" style={
-                {
-                    backgroundColor: "#f1f1f1",
-                    display: "flex",
-                    justifyContent: "space-between",
-                }}>
-                <button type="button" className="cancelbtn" onClick={handleCancle}>Cancel</button>
-                <span className="psw" style={{ color: "black" }}>Forgot <a href="/#">password?</a></span>
-            </div> */}
         </form>
     )
 }

@@ -52,8 +52,7 @@ const AddComment = ({ tweet, setCommentList, loggedUser }) => {
             <div>
                 <MdAddBox size="4em" onClick={(e) => { handleComment(e, tweet.id) }} type="button" />
             </div>
-            {/* <button className="btn btn-dark" style={{ width: "auto" }}
-                onClick={(e) => { handleComment(e, tweet.id) }}><MdAddComment size="2.5em" /></button> */}
+        
         </div>
     )
 }

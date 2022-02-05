@@ -6,7 +6,7 @@ import { BsPersonCircle } from "react-icons/bs";
 import { db } from "../firebase-config";
 import { Link } from "react-router-dom";
 
-const Comment = ({ commentList, setCommentList, tweetID }) => {
+const Comment = ({ commentList, setCommentList, tweetID ,loggedUser}) => {
 
     const commentCollectionRef = collection(db, "comments");
     const deleteComment = async (commentID) => {
@@ -23,7 +23,6 @@ const Comment = ({ commentList, setCommentList, tweetID }) => {
 
 
     return (
-
         <ul>
             {commentList.map((comment) => {
                 return (
@@ -42,11 +41,18 @@ const Comment = ({ commentList, setCommentList, tweetID }) => {
                                                 justifyContent: "space-between",
                                                 alignItems: "baseline"
                                             }}>
-                                                <h5 style={{ fontWeight: "bold" }}><Link to='/profile' onClick={() => { localStorage.setItem("ClickedProfile", comment.userID) }} style={{ textDecoration: "none" }} >{comment.userName}</Link></h5>
-
+                                                <h5 style={{ fontWeight: "bold" }}>
+                                                    {comment.userID === loggedUser.id ? 
+                                                    <Link to='/profile' onClick={() => { localStorage.setItem("ClickedProfile", comment.userID) }} style={{ textDecoration: "none" }} >{loggedUser.userName}</Link>
+                                                    :
+                                                    <Link to='/profile' onClick={() => { localStorage.setItem("ClickedProfile", comment.userID) }} style={{ textDecoration: "none" }} >{comment.userName}</Link>
+                                                    }
                                                 
+                                                </h5>
+
+
                                                 {comment.userID === localStorage.getItem("currentUser") ?
-                                                    <div style={{ width: "auto",marginRight: "-104%" }}>
+                                                    <div style={{ width: "auto", marginRight: "-104%" }}>
                                                         <FaTrash size="1.5em" color="red" type="button" onClick={() => { deleteComment(comment.id); }} />
                                                     </div>
                                                     : <div> </div>}

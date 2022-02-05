@@ -29,38 +29,42 @@ const Profile = ({ isAuth, loggedUser }) => {
         }
         else {
             const setUserProfile = async () => {
+
+                const data = await getDocs(q);
+                setTweetList(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+                
                 const userRef = doc(db, "users", localStorage.getItem("ClickedProfile"));
                 const docSnap = await getDoc(userRef);
                 setUserData({ ...docSnap.data(), id: localStorage.getItem("ClickedProfile") });
                 setLoading(true);
-                
+
                 setFollowers(docSnap.data().Followers ? docSnap.data().Followers.length : 0);
                 setFollowing(docSnap.data().Following ? docSnap.data().Following.length : 0);
 
-                for (let i = 0; i < (docSnap.data().Followers ? docSnap.data().Followers.length : 0); i++) {
+                if (localStorage.getItem("currentUser") !== localStorage.getItem("ClickedProfile")) {
 
-                    if (localStorage.getItem("currentUser") === docSnap.data().Followers[i]) {
-                        let Follow = document.getElementById("Follow");
-                        Follow.style.display = "none";
-                        let unFollow = document.getElementById("UnFollow")
-                        unFollow.style.display = "block";
-                        break;
-                    }
-                    else {
-                        let Follow = document.getElementById("Follow");
-                        Follow.style.display = "block";
-                        let unFollow = document.getElementById("UnFollow")
-                        unFollow.style.display = "none";
+                    for (let i = 0; i < (docSnap.data().Followers ? docSnap.data().Followers.length : 0); i++) {
+
+                        if (localStorage.getItem("currentUser") === docSnap.data().Followers[i]) {
+                            let Follow = document.getElementById("Follow");
+                            Follow.style.display = "none";
+                            let unFollow = document.getElementById("UnFollow")
+                            unFollow.style.display = "block";
+                            break;
+                        }
+                        else {
+                            let Follow = document.getElementById("Follow");
+                            Follow.style.display = "block";
+                            let unFollow = document.getElementById("UnFollow")
+                            unFollow.style.display = "none";
+                        }
                     }
                 }
-
-                const data = await getDocs(q);
-                setTweetList(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
-                setLoading(true);
             }
             setUserProfile();
         }
     }, [])
+    
 
     if (localStorage.getItem("currentUser")) {
         var LoggedUserRef = doc(db, "users", localStorage.getItem("currentUser"));
@@ -86,12 +90,24 @@ const Profile = ({ isAuth, loggedUser }) => {
     const [userName, setUserName] = useState("");
     const ToggleToInputUpdateUserName = async () => {
         document.getElementById("username").style.display = "none";
-        document.getElementById("editname").style.display = "flex";
-        // await updateDoc(LoggedUserRef, {
-        //     userName: arrayUnion(UserData.id)
-        // });
-    }
+        document.getElementById("editname").style.display = "inline-flex";
 
+    }
+    const changeUserName = async (e) => {
+        e.preventDefault();
+        const userCollectionRef = doc(db, "users", localStorage.getItem("currentUser"))
+        await updateDoc(userCollectionRef, {
+            userName: userName
+        })
+        document.getElementById("nameText").innerHTML = userName;
+        tweetList.filter((e)=>{
+            e.userName = userName
+        })
+
+        document.getElementById("username").style.display = "flex";
+        document.getElementById("editname").style.display = "none";
+
+    }
 
     const handleFollowers = (e) => {
         e.preventDefault();
@@ -116,10 +132,9 @@ const Profile = ({ isAuth, loggedUser }) => {
         DeleteFollowUser();
     }
     const tweetCollectionRef = collection(db, "tweet");
-    const q = query(tweetCollectionRef, where("userID", "==", localStorage.getItem("ClickedProfile")));
+    let q = query(tweetCollectionRef, where("userID", "==", localStorage.getItem("ClickedProfile")));
     const [tweetList, setTweetList] = useState([]);
     const [commentList, setCommentList] = useState([])
-
     //time
 
     const commentCollectionRef = collection(db, "comments");
@@ -176,20 +191,33 @@ const Profile = ({ isAuth, loggedUser }) => {
                                                         justifyContent: "center",
                                                         alignItems: "baseline"
                                                     }}>
-                                                        <h3 className="m-b-0" >{UserData.userName}</h3>
+                                                        <h3 className="m-b-0" id="nameText">{UserData.userName}</h3>
 
                                                         <RiEditLine size="1.2em" type="button" onClick={() => { ToggleToInputUpdateUserName() }} />
                                                     </div>
                                                     <div id="editname" style={{
                                                         display: "none",
                                                         justifyContent: "center",
-                                                        alignItems: "baseline"
+                                                        alignItems: "baseline",
+                                                        width: "60%"
                                                     }}>
-                                                        <input type="text" value={userName} onChange={(e) => { setUserName(e.target.value) }} placeholder="Enter Username" name="username" required />
-                                                        <MdCancel size="3em" onClick={() => { document.getElementById("username").style.display = "flex"; document.getElementById("editname").style.display = "none"; setUserName("") }} />
+                                                        {/* <div class="input-group"> */}
+                                                        <input type="text" className="form-control" placeholder="Enter Username" name="username" aria-label="Recipient's username with two button addons" value={userName} onChange={(e) => { setUserName(e.target.value) }}
+                                                            style={{
+                                                                width: "330%",
+                                                                display: "block",
+                                                                padding: "0.375rem 0.75rem",
+                                                                color: "#212529",
+                                                                backgroundColor: "#fff",
+                                                                backgroundClip: "padding-box",
+                                                                border: "1px solid #ced4da",
+                                                                borderRadius: "0.25rem",
+                                                                transition: "border-color .15s ease-in-out,box-shadow .15s ease-in-out",
+                                                                background:"white"
+                                                            }} />
+                                                        <button className="btn btn-outline-secondary" type="button" onClick={(e)=>changeUserName(e)}>edit</button>
+                                                        <button className="btn btn-outline-secondary" onClick={() => { document.getElementById("username").style.display = "flex"; document.getElementById("editname").style.display = "none"; setUserName("") }} type="button">cancel</button>
                                                     </div>
-                                                    {/* <p>Web Designer &amp; Developer</p> */}
-                                                    {/* <button className="m-t-10 waves-effect waves-dark btn btn-primary btn-md btn-rounded" >Follow</button> */}
                                                     <div className="row text-center m-t-20">
                                                         <div className="col-lg-4 col-md-4 m-t-20">
                                                             <h3 className="m-b-0 font-light">{tweetList.length}</h3><small>Tweets</small>
@@ -225,7 +253,7 @@ const Profile = ({ isAuth, loggedUser }) => {
                                                             fontWeight: "bold",
                                                             marginLeft: "1%",
                                                             marginRight: "auto"
-                                                        }}>{tweet.userName}
+                                                        }}>{UserData.userName}
                                                         </h5>
                                                         <FaTrash size="1.5em" color="red" type="button" onClick={() => { deleteTweet(tweet.id); }} />
                                                         <br />
@@ -248,7 +276,7 @@ const Profile = ({ isAuth, loggedUser }) => {
                                                         <div className="collapse" id={tweet.id}>
                                                             <div className="card card-body">
                                                                 <AddComment tweet={tweet} setCommentList={setCommentList} loggedUser={loggedUser} />
-                                                                <Comment commentList={commentList} setCommentList={setCommentList} tweetID={tweet.id} />
+                                                                <Comment commentList={commentList} setCommentList={setCommentList} tweetID={tweet.id} loggedUser={loggedUser}/>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -333,7 +361,7 @@ const Profile = ({ isAuth, loggedUser }) => {
                                                         <div className="collapse" id={tweet.id}>
                                                             <div className="card card-body">
                                                                 <AddComment tweet={tweet} setCommentList={setCommentList} loggedUser={loggedUser} />
-                                                                <Comment commentList={commentList} setCommentList={setCommentList} tweetID={tweet.id} />
+                                                                <Comment commentList={commentList} setCommentList={setCommentList} tweetID={tweet.id} loggedUser={loggedUser}/>
                                                             </div>
                                                         </div>
                                                     </div>

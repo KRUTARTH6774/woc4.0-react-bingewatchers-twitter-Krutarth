@@ -63,8 +63,7 @@ const SignupForm = ({ setIsAuth }) => {
                         userPhoneNumber: result.user.phoneNumber,
                         userPassword: userPasswordWithGoogle,
                     });
-                    // localStorage.setItem("isAuth", true);
-                    // setIsAuth(true);
+
                     navigate("/login");
                 }
             })
@@ -85,8 +84,7 @@ const SignupForm = ({ setIsAuth }) => {
             else {
 
                 await addDoc(signupCollectionRef, { Id: sno, userName, userEmail, userPhoneNumber, userPassword });
-                // localStorage.setItem("isAuth", true);
-                // setIsAuth(true);
+
                 navigate("/login");
             }
         }

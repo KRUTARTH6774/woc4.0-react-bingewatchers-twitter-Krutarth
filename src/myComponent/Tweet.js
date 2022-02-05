@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { addDoc, collection, getDocs, query, updateDoc, orderBy, doc, deleteDoc, where, arrayUnion, arrayRemove,getDoc } from "firebase/firestore";
+import { addDoc, collection, getDocs, query, updateDoc, orderBy, doc, deleteDoc, where, arrayUnion, arrayRemove, getDoc } from "firebase/firestore";
 import { AiOutlineComment } from "react-icons/ai";
 import { BsHeart } from "react-icons/bs";
 import { FcLike } from "react-icons/fc";
@@ -19,7 +19,7 @@ const Tweet = ({ loggedUser }) => {
     const [tweetList, setTweetList] = useState([]);
     const [commentList, setCommentList] = useState([])
     const [Like, setLike] = useState(0);
-    // const [unlike, setUnlike] = useState(0);
+
 
     var sno = 1;
     var userIdArr = [];
@@ -69,14 +69,8 @@ const Tweet = ({ loggedUser }) => {
             // console.log(tweetList);
             const likeUserCollectionRef = doc(db, "users", localStorage.getItem("currentUser"))
             const likeSnap = await getDoc(likeUserCollectionRef)
-            data.docs.map((tweet)=>{
-                // document.getElementById("totalLikes" + tweet.id).innerHTML = tweetList.Like? tweetList.Like.length : 0
-                // console.log(data.docs[0]._document.data.value.mapValue.fields.Like?data.docs[0]._document.data.value.mapValue.fields.Like.arrayValue.values.length:0);
-                // console.log(tweet._document.data.value.mapValue.fields.Like?tweet._document.data.value.mapValue.fields.Like.arrayValue.values.length:0);
-                // setLike(tweet._document.data.value.mapValue.fields.Like?tweet._document.data.value.mapValue.fields.Like.arrayValue.values.length:0);
-                // console.log(Like);
-                // document.getElementById("totalLikes" + tweet.id).innerHTML =tweet._document.data.value.mapValue.fields.Like?tweet._document.data.value.mapValue.fields.Like.arrayValue.values.length:0;
-                for (let i = 0; i < ( likeSnap.data().Like? likeSnap.data().Like.length : 0); i++) {
+            data.docs.map((tweet) => {
+                for (let i = 0; i < (likeSnap.data().Like ? likeSnap.data().Like.length : 0); i++) {
                     if (tweet.id === likeSnap.data().Like[i]) {
                         document.getElementById("like" + tweet.id).style.display = "block";
                         document.getElementById("unlike" + tweet.id).style.display = "none";
@@ -102,8 +96,6 @@ const Tweet = ({ loggedUser }) => {
         await updateDoc(likeTweetCollectionRef, {
             Like: arrayUnion(localStorage.getItem("currentUser"))
         })
-        // const likeSnap = await getDoc(likeTweetCollectionRef)
-        // setLike(likeSnap.data().Like ? likeSnap.data().Like.length : 0);
     }
     const Deletelike = async (tweetID) => {
         const likeUserCollectionRef = doc(db, "users", localStorage.getItem("currentUser"))
@@ -114,14 +106,12 @@ const Tweet = ({ loggedUser }) => {
         await updateDoc(likeTweetCollectionRef, {
             Like: arrayRemove(localStorage.getItem("currentUser"))
         })
-        // const likeSnap = await getDoc(likeTweetCollectionRef)
-        // setLike(likeSnap.data().Like ? likeSnap.data().Like.length : 0);
     }
     const handleLike = (e, tweetID) => {
         e.preventDefault();
         document.getElementById("like" + tweetID).style.display = "block";
         document.getElementById("unlike" + tweetID).style.display = "none";
-        setLike(Like+1)
+        setLike(Like + 1)
         UpdateLikes(tweetID);
 
     }
@@ -129,20 +119,15 @@ const Tweet = ({ loggedUser }) => {
         e.preventDefault();
         document.getElementById("like" + tweetID).style.display = "none";
         document.getElementById("unlike" + tweetID).style.display = "block";
-        setLike(Like-1)
+        setLike(Like - 1)
         Deletelike(tweetID);
     }
     const deleteTweet = async (tweetID) => {
         const tweetDoc = doc(db, "tweet", tweetID)
         await deleteDoc(tweetDoc);
-        // const commentDoc = doc(db, "comments", tweetID)
-        // await deleteDoc(commentDoc);
         const q2 = query(commentCollectionRef, where("tweetID", "==", tweetID))
-        // await deleteDoc(q2)
         const querySnapshot = await getDocs(q2);
         querySnapshot.forEach((doc1) => {
-            // doc.data() is never undefined for query doc snapshots
-            // console.log(doc.id, " => ", doc.data());
             const commentDoc = doc(db, "comments", doc1.id)
             deleteDoc(commentDoc);
         });
@@ -196,15 +181,19 @@ const Tweet = ({ loggedUser }) => {
                                                 fontWeight: "bold",
                                                 marginLeft: "1%",
                                                 marginRight: "auto"
-                                            }}><Link to='/profile' onClick={() => { localStorage.setItem("ClickedProfile", tweet.userID) }} style={{ textDecoration: "none" }} >{tweet.userName}</Link></h5>
+                                            }}>
+                                                {tweet.userID === loggedUser.id ?
+                                                 <Link to='/profile' onClick={() => { localStorage.setItem("ClickedProfile", tweet.userID) }} style={{ textDecoration: "none" }} >{loggedUser.userName}</Link>
+                                                :
+                                                <Link to='/profile' onClick={() => { localStorage.setItem("ClickedProfile", tweet.userID) }} style={{ textDecoration: "none" }} >{tweet.userName}</Link>
+                                                }
+
+                                            </h5>
 
 
                                             {tweet.userID === localStorage.getItem("currentUser") &&
                                                 <FaTrash size="1.5em" color="red" type="button" onClick={() => { deleteTweet(tweet.id); }} />
                                             }
-                                            {/* {tweet.userID === localStorage.getItem("currentUser") && <button className="btn btn-danger" style={{ width: "auto", background: "black" }} onClick={() => { deleteTweet(tweet.id); }}>
-                                                <FaTrash />
-                                            </button>} */}
                                             <br />
                                             <span style={{
                                                 position: "absolute",
@@ -237,8 +226,8 @@ const Tweet = ({ loggedUser }) => {
                                                         }}>
                                                         <BsHeart size="1.6em" type="button" onClick={(e) => { handleLike(e, tweet.id) }} />
                                                     </div>
-                                                    <div className="totalLikes" style={{marginLeft:"10px"}}>
-                                                        <span id={"totalLikes" + tweet.id}>{tweet.Like ? tweet.Like.length:0}</span>
+                                                    <div className="totalLikes" style={{ marginLeft: "10px" }}>
+                                                        <span id={"totalLikes" + tweet.id}>{tweet.Like ? tweet.Like.length : 0}</span>
                                                     </div>
                                                 </div>
                                                 <AiOutlineComment size="2em" color="black" type="button" onClick={() => { myFunction(tweet.id) }} />
@@ -247,7 +236,7 @@ const Tweet = ({ loggedUser }) => {
                                             <div className="collapse" id={tweet.id}>
                                                 <div className="card card-body">
                                                     <AddComment tweet={tweet} setCommentList={setCommentList} loggedUser={loggedUser} />
-                                                    <Comment commentList={commentList} setCommentList={setCommentList} tweetID={tweet.id} />
+                                                    <Comment commentList={commentList} setCommentList={setCommentList} loggedUser={loggedUser} tweetID={tweet.id} />
                                                 </div>
                                             </div>
 
